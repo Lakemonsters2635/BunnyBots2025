@@ -4,9 +4,13 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.CANBus;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,8 +21,11 @@ import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
 
 public class SwerveModule {
-  private final TalonFX m_driveMotor;
-  private final TalonFX m_turningMotor;
+  private final SparkMax m_driveMotor;
+  private final SparkMax m_turningMotor;
+
+  private final SparkMaxConfig m_driveMotorConfig;
+  private final SparkMaxConfig m_turningMotorConfig;
 
   private final AnalogInput m_turningEncoderInput;
 
@@ -46,11 +53,26 @@ public class SwerveModule {
       double driveMotorGain
       ) {
 
-    m_driveMotor = new TalonFX(driveMotorChannel, new CANBus(Constants.CAN_BUS_NAME));
-    m_turningMotor = new TalonFX(turningMotorChannel,  new CANBus(Constants.CAN_BUS_NAME));
+    m_driveMotor = new SparkMax(driveMotorChannel, MotorType.kBrushless);
+    m_turningMotor = new SparkMax(turningMotorChannel, MotorType.kBrushless);
 
-    m_driveMotor.setNeutralMode(NeutralModeValue.Brake);
-    m_turningMotor.setNeutralMode(NeutralModeValue.Brake);
+    m_driveMotorConfig = new SparkMaxConfig();
+    m_turningMotorConfig = new SparkMaxConfig();
+    
+    m_driveMotorConfig.idleMode(IdleMode.kBrake);
+    m_turningMotorConfig.idleMode(IdleMode.kBrake);
+
+    m_driveMotor.configure(
+      m_driveMotorConfig, 
+      ResetMode.kResetSafeParameters, 
+      PersistMode.kPersistParameters
+    );
+
+    m_turningMotor.configure(
+      m_turningMotorConfig, 
+      ResetMode.kResetSafeParameters, 
+      PersistMode.kPersistParameters
+    );
 
     this.turningMotorOffsetRadians = turningMotorOffsetRadians;
 
@@ -62,11 +84,15 @@ public class SwerveModule {
   }
 
   public SwerveModulePosition getPosition() {
-    return new SwerveModulePosition(m_driveMotor.getPosition().getValueAsDouble() * Constants.kDriveEncoderDistancePerPulse, new Rotation2d(getTurningEncoderRadians()));
+    return new SwerveModulePosition(m_driveMotor.getAbsoluteEncoder().getPosition() * Constants.kDriveEncoderDistancePerPulse, new Rotation2d(getTurningEncoderRadians()));
+  }
+
+  public double getTurningEncoderVoltage() {
+    return m_turningEncoderInput.getVoltage();
   }
 
   public double getTurningEncoderRadians(){
-    double angle = (1.0 - (m_turningEncoderInput.getVoltage()/RobotController.getVoltage5V())) * 2.0 * Math.PI + turningMotorOffsetRadians;
+    double angle = (1.0 - (getTurningEncoderVoltage()/RobotController.getVoltage5V())) * 2.0 * Math.PI + turningMotorOffsetRadians;
     angle %= 2.0 * Math.PI;
     if (angle < 0.0) {
         angle += 2.0 * Math.PI;
@@ -75,8 +101,8 @@ public class SwerveModule {
     return angle;
   }
 
-  public double getTurningEncoderVoltage() {
-    return m_turningEncoderInput.getVoltage();
+  public double getVelocity() {
+    return m_driveMotor.getEncoder().getVelocity() * (Constants.kDriveEncoderDistancePerPulse/60);
   }
 
   /**
@@ -85,11 +111,7 @@ public class SwerveModule {
    * @return The current state of the module.
    */
   public SwerveModuleState getState() {
-    return new SwerveModuleState(m_driveMotor.getVelocity().getValueAsDouble(), new Rotation2d(getTurningEncoderRadians()));
-  }
-
-  public double getVelocity() {
-    return m_driveMotor.getVelocity().getValueAsDouble();
+    return new SwerveModuleState(getVelocity(), new Rotation2d(getTurningEncoderRadians()));
   }
 
   public void stop(){
@@ -105,19 +127,19 @@ public class SwerveModule {
   public void setDesiredState(SwerveModuleState desiredState) {
     SwerveModuleState state = desiredState;
 
-    // Prevent rotating module if speed is less than 0.1%. Prevents Jittering.
+    // Prevent rotating module if speed is small. Prevents Jittering.
     if (Math.abs(state.speedMetersPerSecond) < 0.001) {
         stop();
         return;
     }
     
-    state.optimize(new Rotation2d(getTurningEncoderRadians()));
+    // state.optimize(new Rotation2d(getTurningEncoderRadians()));
 
     // Calculate the drive output from the drive PID controller.
     // Note: due to the drive PID constants being zero currently, this driveOutput will
     //       always be zero.
     final double driveOutput =
-      m_drivePIDController.calculate(m_driveMotor.getVelocity().getValueAsDouble(), state.speedMetersPerSecond);
+      m_drivePIDController.calculate(getVelocity(), state.speedMetersPerSecond);
 
 
     final double driveFeedForward = state.speedMetersPerSecond / Constants.kMaxSpeedMetersPerSecond;
