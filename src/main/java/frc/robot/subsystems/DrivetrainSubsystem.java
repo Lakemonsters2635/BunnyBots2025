@@ -295,6 +295,21 @@ public class DrivetrainSubsystem extends SubsystemBase {
       else if(rightJoystick.getPOV()==Constants.HAT_POV_MOVE_LEFT){
         xPowerCommanded = Constants.HAT_POWER_MOVE*-1.0;
       }
+      else {
+        if (rightJoystick.getY()>0.05 || rightJoystick.getY()<-0.05) {
+          yPowerCommanded = rightJoystick.getY() * -1;
+        }
+        else{
+          yPowerCommanded = 0;
+        }
+
+        if (rightJoystick.getX()>0.05 || rightJoystick.getX()<-0.05) {
+          xPowerCommanded = rightJoystick.getX();
+        }
+        else{
+          xPowerCommanded = 0;
+        }
+      }
 
       if(leftJoystick.getPOV()==Constants.HAT_POV_ROTATE_RIGHT){
         rotCommanded = Constants.HAT_POWER_ROTATE*-1;
@@ -302,19 +317,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
       else if(leftJoystick.getPOV()==Constants.HAT_POV_ROTATE_LEFT){
         rotCommanded = Constants.HAT_POWER_ROTATE;
       }
-
-      if (rightJoystick.getY()>0.05 || rightJoystick.getY()<-0.05) {
-        yPowerCommanded = rightJoystick.getY() * -1;
-      }
-
-      if (rightJoystick.getX()>0.05 || rightJoystick.getX()<-0.05) {
-        xPowerCommanded = rightJoystick.getX();
+      else{
+        if (Math.pow(rightJoystick.getTwist(),3)>0.05 || Math.pow(rightJoystick.getTwist(),3)<-0.05) {
+          rotCommanded = rightJoystick.getTwist()*-1;
+        }
+        else{
+          rotCommanded = 0;
+        }
       }
 
       // TODO: look at the deadband below
-      if (Math.pow(rightJoystick.getTwist(),3)>0.05 || Math.pow(rightJoystick.getTwist(),3)<-0.05) {
-        rotCommanded = rightJoystick.getTwist()*-1;
-      }
+      
 
       // TODO: document how to use this button to reset various robot centers of rotation
       // Note: you can have multiple buttons for defining multiple centers of rotation.
