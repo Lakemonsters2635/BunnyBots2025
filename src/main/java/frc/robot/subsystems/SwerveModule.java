@@ -133,7 +133,7 @@ public class SwerveModule {
         return;
     }
     
-    // state.optimize(new Rotation2d(getTurningEncoderRadians()));
+    state.optimize(new Rotation2d(getTurningEncoderRadians()));
 
     // Calculate the drive output from the drive PID controller.
     // Note: due to the drive PID constants being zero currently, this driveOutput will
