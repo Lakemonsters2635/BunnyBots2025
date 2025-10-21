@@ -10,7 +10,7 @@ public class Constants {
     public static final double kMaxSpeedMetersPerSecond = 6.0;//4.0;
     // TODO: 'EncoderDistancePerPulse' should be calculated based on the gearing and wheel diameter
     public static final double kWheelDiameterMeters = Units.inchesToMeters(3.5); // 3.5 inch wheels
-    public static final double kDriveEncoderDistancePerPulse = 1;
+    public static final double kDriveEncoderDistancePerPulse = 0.0001/0.002706682950506;
 
     public static final double maxModuleLinearSpeed= 1.75; // Irrelevant used for createPath
     public static final double maxModuleLinearAccelaration = 8;
@@ -64,6 +64,5 @@ public class Constants {
     // JOYSTICKS
     public static final int LEFT_JOYSTICK_PORT = 0; // TODO: set correct ports
     public static final int RIGHT_JOYSTICK_PORT = 1;
-    
-    
 }
+    
