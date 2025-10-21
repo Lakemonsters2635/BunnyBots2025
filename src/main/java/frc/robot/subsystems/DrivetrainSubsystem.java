@@ -443,6 +443,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   /** Get pose from odometry field **/
   public Pose2d getPose() {
+    System.out.println(m_odometry.getPoseMeters());
     return m_odometry.getPoseMeters();
   }
 
@@ -545,7 +546,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
    */
   public void tuneAngleOffsetPutToDTS() {
     // TUNE ANGLE OFFSETS
-    
+    System.out.println(getPose());
+    SmartDashboard.putNumber("getFLPose()", m_frontLeft.getDrivePosition());
+    SmartDashboard.putNumber("getFRPose()", m_frontRight.getDrivePosition());
+    SmartDashboard.putNumber("getBLPose()", m_backLeft.getDrivePosition());
+    SmartDashboard.putNumber("getBRPose()", m_backRight.getDrivePosition());
+
     SmartDashboard.putNumber("FL encoder pos", Math.toDegrees(m_frontLeft.getTurningEncoderRadians()));
     SmartDashboard.putNumber("FR encoder pos", Math.toDegrees(m_frontRight.getTurningEncoderRadians()));
     SmartDashboard.putNumber("BL encoder pos", Math.toDegrees(m_backLeft.getTurningEncoderRadians()));
@@ -560,5 +566,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("getPose.getY", getPose().getY());
     SmartDashboard.putNumber("gyro.getAngle", m_gyro.getAngle());
     SmartDashboard.putNumber("getPose.getRotation", getPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("gyroY", m_gyro.getVelocityY());
   }
 }

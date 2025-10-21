@@ -84,7 +84,11 @@ public class SwerveModule {
   }
 
   public SwerveModulePosition getPosition() {
-    return new SwerveModulePosition(m_driveMotor.getAbsoluteEncoder().getPosition() * Constants.kDriveEncoderDistancePerPulse, new Rotation2d(getTurningEncoderRadians()));
+    return new SwerveModulePosition(m_driveMotor.getEncoder().getPosition() * Constants.kDriveEncoderDistancePerPulse, new Rotation2d(getTurningEncoderRadians()));
+  }
+
+  public double getDrivePosition(){
+    return m_driveMotor.getEncoder().getPosition();
   }
 
   public double getTurningEncoderVoltage() {

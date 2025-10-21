@@ -5,12 +5,12 @@ import edu.wpi.first.math.util.Units;
 public class Constants {
     // SWERVE
     public static final double kPModuleTurningController = 0.5; // 0.5
-    public static final double kPModuleDriveController = 0.0;
+    public static final double kPModuleDriveController = 0.5; //added random value for test
     
     public static final double kMaxSpeedMetersPerSecond = 6.0;//4.0;
     // TODO: 'EncoderDistancePerPulse' should be calculated based on the gearing and wheel diameter
     public static final double kWheelDiameterMeters = Units.inchesToMeters(3.5); // 3.5 inch wheels
-    public static final double kDriveEncoderDistancePerPulse = (kWheelDiameterMeters * Math.PI) * (1.0 / (45.0 / 15.0) / (17.0 / 27.0) / (50.0 / 14.0)); 
+    public static final double kDriveEncoderDistancePerPulse = 1;
 
     public static final double maxModuleLinearSpeed= 1.75; // Irrelevant used for createPath
     public static final double maxModuleLinearAccelaration = 8;
