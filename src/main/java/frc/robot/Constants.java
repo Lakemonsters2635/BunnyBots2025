@@ -64,5 +64,9 @@ public class Constants {
     // JOYSTICKS
     public static final int LEFT_JOYSTICK_PORT = 0; // TODO: set correct ports
     public static final int RIGHT_JOYSTICK_PORT = 1;
+
+    //INDEX SUBSYSTEM CONSTANTS
+    public static final int INDEX_SUBSYSTEM_ID = 2; //TODO: change ID values when get robot
+    public static final double INDEX_SUBSYSTEM_VOLTAGE = 0.1; //TODO: change value when get robot
 }
     
