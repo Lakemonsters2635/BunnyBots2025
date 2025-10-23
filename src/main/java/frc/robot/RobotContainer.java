@@ -6,10 +6,13 @@ package frc.robot;
 
 
 import frc.robot.commands.Autos;
+import frc.robot.commands.OuttakeCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.OuttakeSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -25,6 +28,10 @@ public class RobotContainer {
   public static Joystick leftJoystick = new Joystick(Constants.LEFT_JOYSTICK_PORT);
 
   public static DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+
+  public static OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
+
+  public static OuttakeCommand m_outtakeCommand = new OuttakeCommand(m_outtakeSubsystem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   
@@ -45,6 +52,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
+    Trigger outtakeTrigger = new JoystickButton(leftJoystick, 0);
+
+    outtakeTrigger.whileTrue(m_outtakeCommand);
+
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
