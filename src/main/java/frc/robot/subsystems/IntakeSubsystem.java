@@ -11,21 +11,25 @@ import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
-  private final TalonFX m_intakeMotor;
+  private final TalonFX m_intakeMotor1;
+  private final TalonFX m_intakeMotor2;
 
 
   public IntakeSubsystem() {
-    m_intakeMotor = new TalonFX(Constants.INTAKE_MOTOR_ID);
+    m_intakeMotor1 = new TalonFX(Constants.INTAKE_MOTOR_ID1);
+    m_intakeMotor2 = new TalonFX(Constants.INTAKE_MOTOR_ID2);
   
     
   }
 
   public void intake(){
-    m_intakeMotor.setVoltage(Constants.INTAKE_MOTOR_VOLTAGE);
+    m_intakeMotor1.setVoltage(Constants.INTAKE_MOTOR_VOLTAGE);
+    m_intakeMotor2.setVoltage(Constants.INTAKE_MOTOR_VOLTAGE);
   }
 
   public void stopIntake(){
-    m_intakeMotor.setVoltage(0);
+    m_intakeMotor1.setVoltage(0);
+    m_intakeMotor2.setVoltage(0);
   }
 
   @Override
