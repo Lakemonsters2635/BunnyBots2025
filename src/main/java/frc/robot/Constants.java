@@ -64,5 +64,12 @@ public class Constants {
     // JOYSTICKS
     public static final int LEFT_JOYSTICK_PORT = 0; // TODO: set correct ports
     public static final int RIGHT_JOYSTICK_PORT = 1;
+
+    //INTAKE CONSTANTS
+    public static final int INTAKE_MOTOR_ID = 3;//TODO: change ID when given robot
+    public static final double INTAKE_MOTOR_VOLTAGE = 0.1;//TODO: change voltage for when we actully have a robot
+    
 }
+
+
     
