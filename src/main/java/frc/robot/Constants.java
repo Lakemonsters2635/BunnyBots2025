@@ -63,7 +63,7 @@ public class Constants {
 
     //ELEVATOR CONSTANTS
     public static final int ELEVATOR_MOTOR_ID = 0; //TODO: Change this value later when robot is accessible
-    
+    public static final int ELEVATOR_ENCODER_CLICK = 0;// number of clicks in a full rotation of the elavtator motor
     // JOYSTICKS
     public static final int LEFT_JOYSTICK_PORT = 0; // TODO: set correct ports
     public static final int RIGHT_JOYSTICK_PORT = 1;

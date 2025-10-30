@@ -20,13 +20,14 @@ public class ElevatorSubsystem extends SubsystemBase {
   private static SparkMax m_elevatorMotor;
   private static SparkMaxConfig m_elevatorConfig;
   
-  double fb=0, ff=0;//TODO: figure out ff value when we get robot
+  double fb=0, ff=0, gain=0, offset = 0;//TODO: figure out gain value
   double targetPos = 0;
 
   public ElevatorSubsystem() {
     m_elevatorController = new PIDController(0, 0, 0); //TODO: configure PID values later
 
     m_elevatorMotor = new SparkMax(Constants.ELEVATOR_MOTOR_ID, MotorType.kBrushless);
+    
     m_elevatorConfig = new SparkMaxConfig();
 
     m_elevatorConfig.idleMode(IdleMode.kBrake);
@@ -37,8 +38,21 @@ public class ElevatorSubsystem extends SubsystemBase {
       SparkBase.ResetMode.kResetSafeParameters, 
       SparkBase.PersistMode.kPersistParameters
     );
+
+    resetEncoder();
   }
 
+  public double getDegrees() {
+    // 160 is the gear ratio
+    double degrees = (getEncoderValue() / Constants.ELEVATOR_ENCODER_CLICK) * 360;  //160 old gear ratio
+    degrees += offset; // Calibration offset required with the setup
+    degrees %= 360;
+    return degrees;
+  }
+
+  public void resetEncoder() {
+    m_elevatorMotor.getEncoder().setPosition(0);
+  }
   public void setTargetPos(double target){
     targetPos = target;
   }
@@ -53,8 +67,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    fb = m_elevatorController.calculate(getEncoderValue(), targetPos);
-    fb = MathUtil.clamp(fb, -2, 2); //TODO: FIX THESE PLS LATER
-    setVoltage(ff+fb);
+    targetPos = MathUtil.clamp(targetPos, 0, 90);
+    ff = gain*Math.sin(Math.toRadians(getDegrees()));
+    fb = m_elevatorController.calculate(getDegrees(), targetPos);
+    setVoltage(MathUtil.clamp(ff+fb, -2, 2));
   }
 }
