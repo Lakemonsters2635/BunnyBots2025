@@ -16,17 +16,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ElevatorSubsystem extends SubsystemBase {
-  public static SparkMax m_elevatorMotor;
-  public static PIDController m_elevatorController;
-
-  public static SparkMaxConfig m_elevatorConfig;
+  private static PIDController m_elevatorController;
+  private static SparkMax m_elevatorMotor;
+  private static SparkMaxConfig m_elevatorConfig;
+  
   double fb=0, ff=0;//TODO: figure out ff value when we get robot
-
   double targetPos = 0;
-
 
   public ElevatorSubsystem() {
     m_elevatorController = new PIDController(0, 0, 0); //TODO: configure PID values later
+
     m_elevatorMotor = new SparkMax(Constants.ELEVATOR_MOTOR_ID, MotorType.kBrushless);
     m_elevatorConfig = new SparkMaxConfig();
 
@@ -34,9 +33,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     m_elevatorConfig.inverted(false);
 
     m_elevatorMotor.configure(
-    m_elevatorConfig,
-    SparkBase.ResetMode.kResetSafeParameters, 
-    SparkBase.PersistMode.kPersistParameters
+      m_elevatorConfig,
+      SparkBase.ResetMode.kResetSafeParameters, 
+      SparkBase.PersistMode.kPersistParameters
     );
   }
 
@@ -54,7 +53,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
     fb = m_elevatorController.calculate(getEncoderValue(), targetPos);
     fb = MathUtil.clamp(fb, -2, 2); //TODO: FIX THESE PLS LATER
     setVoltage(ff+fb);
