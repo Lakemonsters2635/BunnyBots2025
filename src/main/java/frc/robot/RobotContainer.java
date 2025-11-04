@@ -6,6 +6,7 @@ package frc.robot;
 
 
 import frc.robot.commands.Autos;
+import frc.robot.commands.VisionAutoCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ObjectTrackerSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -28,6 +29,8 @@ public class RobotContainer {
   public static DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
   public static ObjectTrackerSubsystem m_objectTrackerSubsystem = new ObjectTrackerSubsystem("Eclipse");
+
+  public static VisionAutoCommand m_visionAutoCommand = new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 8, 0.00001, 0.0001, 0.0001);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   
@@ -62,6 +65,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new Command(){};
+    return m_visionAutoCommand;
   }
 }
