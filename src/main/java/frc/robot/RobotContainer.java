@@ -27,7 +27,7 @@ public class RobotContainer {
 
   public static DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
-  public static ObjectTrackerSubsystem m_objectTrackerSubsystem = new ObjectTrackerSubsystem("front");
+  public static ObjectTrackerSubsystem m_objectTrackerSubsystem = new ObjectTrackerSubsystem("Eclipse");
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   
