@@ -91,6 +91,7 @@ public class VisionAutoCommand extends Command{
     try {
         m_ots.data();
         Pose2d tempTargetPose = visionAutoData(m_xPrime, m_zPrime, m_finalYa, m_tagID) ;
+        SmartDashboard.putBoolean("isNull", tempTargetPose == null);
         targetPose = tempTargetPose == null ? targetPose : tempTargetPose;
         m_x_target = targetPose.getX();
         m_y_target = targetPose.getY();
@@ -99,7 +100,6 @@ public class VisionAutoCommand extends Command{
         x_pose_last_check = m_dts.getPose().getX();
         y_pose_last_check = m_dts.getPose().getY();
         rot_pose_last_check = m_dts.getPose().getRotation().getDegrees();
-
     } catch (Exception e) {
         System.out.println(e);
     }
@@ -108,8 +108,23 @@ public class VisionAutoCommand extends Command{
     double y_pose = m_dts.getPose().getY();
     double rot_pose = m_dts.getPose().getRotation().getDegrees();
 
-    double pid_x = m_visionSwerveController_x.calculate(x_pose, m_x_target + x_pose_last_check);
-    double pid_y = m_visionSwerveController_y.calculate(y_pose, m_y_target);
+    /*
+     * x_pose= robot's current x position
+     * When see april tag:
+     * x_pose = x_pose_last_check
+     * 
+     * When not see april tag:
+     * x_pose_last_check = last robot position when able to see apriltag
+     */
+
+     SmartDashboard.putNumber("deltaPosePosex", x_pose-x_pose_last_check);
+     SmartDashboard.putNumber("deltaPosePosey", y_pose-y_pose_last_check);
+
+     SmartDashboard.putNumber("deltaposetargetx", x_pose-(-m_y_target + x_pose_last_check));
+     SmartDashboard.putNumber("deltaposetargety", y_pose-(-m_x_target + y_pose_last_check));
+
+    double pid_x = m_visionSwerveController_x.calculate(-x_pose, m_y_target - x_pose_last_check);
+    double pid_y = m_visionSwerveController_y.calculate(y_pose, -m_x_target + y_pose_last_check);
     double pid_rot = m_visionSwerveController_rot.calculate(Math.toRadians(rot_pose), Math.toRadians((m_rot_target + rot_pose_last_check) % 360));
 
     double pid_c = Math.hypot(pid_x, pid_y);
@@ -121,11 +136,17 @@ public class VisionAutoCommand extends Command{
     // double m_fb_y = MathUtil.clamp(pid_y, -y_clamp, y_clamp);
     // double m_fb_rot = MathUtil.clamp(pid_rot, -PURE_VISION_MAX_RAD_PER_SEC, PURE_VISION_MAX_RAD_PER_SEC);
 
-    double m_fb_x = MathUtil.clamp(pid_x, -.2, .2);
-    double m_fb_y = MathUtil.clamp(pid_y, -.2, .2);
-    double m_fb_rot = MathUtil.clamp(pid_rot, -Math.PI/4, Math.PI/4);
+    double m_fb_x = MathUtil.clamp(pid_x/pid_c * .1, -.1, .1);
+    double m_fb_y = MathUtil.clamp(pid_y/pid_c * .1, -.1, .1);
+    double m_fb_rot = MathUtil.clamp(pid_rot/4, -Math.PI/4, Math.PI/4);
 
+    SmartDashboard.putNumber("pid_x", pid_x);
+    SmartDashboard.putNumber("pid_y", pid_y);
+
+    SmartDashboard.putNumber("m_fb_x", m_fb_x);
+    SmartDashboard.putNumber("m_fb_y", m_fb_y);
     m_dts.drive(m_fb_x, m_fb_y, 0, true);
+    updateDashboard();
     // m_dts.drive(m_fb_x, m_fb_y, m_fb_rot, true);
   }
 
@@ -166,8 +187,11 @@ public class VisionAutoCommand extends Command{
       }
     }
     if (detection == null){
+      SmartDashboard.putBoolean("ableToSeeAT", false);
       return null;
     } 
+    SmartDashboard.putBoolean("ableToSeeAT", true);
+
 
     // detection = m_ots.
 
