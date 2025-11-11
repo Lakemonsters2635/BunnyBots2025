@@ -133,8 +133,8 @@ public class VisionAutoCommand extends Command{
     // TODO: Use cameraAngleOffset and a rotation matrix for conversions
     // Note the negatives in the equations below change this to a -90deg rotation
     //.calculate(measurement, setpoint)
-    double pid_x = m_visionSwerveController_x.calculate(x_pose, m_y_target + x_pose_last_check);
-    double pid_y = m_visionSwerveController_y.calculate(y_pose, -m_x_target + y_pose_last_check);
+    double pid_x = m_visionSwerveController_x.calculate(x_pose, m_x_target + x_pose_last_check);
+    double pid_y = m_visionSwerveController_y.calculate(y_pose, m_y_target + y_pose_last_check);
     double pid_rot = m_visionSwerveController_rot.calculate(Math.toRadians(rot_pose), Math.toRadians((m_rot_target + rot_pose_last_check) % 360));
     // if(Math.abs(x_pose-(-m_y_target + x_pose_last_check)) < 0.02) 
     //           isReachX = true;
@@ -147,8 +147,8 @@ public class VisionAutoCommand extends Command{
 
     SmartDashboard.putNumber("deltaposetargetx", m_visionSwerveController_x.getError()); // -x_pose-(m_y_target - x_pose_last_check)
     SmartDashboard.putNumber("deltaposetargety", m_visionSwerveController_y.getError());
-    SmartDashboard.putNumber("pidxtarget", m_y_target - x_pose_last_check);
-    SmartDashboard.putNumber("pidytarget", -m_x_target + y_pose_last_check);
+    SmartDashboard.putNumber("pidxtarget", m_x_target - x_pose_last_check);
+    SmartDashboard.putNumber("pidytarget", m_y_target - y_pose_last_check);
 
     pid_x = isReachX ? 0 : pid_x;
     pid_y = isReachY ? 0 : pid_y;
