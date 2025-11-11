@@ -127,19 +127,28 @@ public class VisionAutoCommand extends Command{
     SmartDashboard.putNumber("deltaPosePosex", x_pose-x_pose_last_check);
     SmartDashboard.putNumber("deltaPosePosey", y_pose-y_pose_last_check);
 
-    SmartDashboard.putNumber("deltaposetargetx", m_y_target-(x_pose_last_check- x_pose)); // -x_pose-(m_y_target - x_pose_last_check)
-    SmartDashboard.putNumber("deltaposetargety", y_pose-(-m_x_target + y_pose_last_check));
-
+    
+ SmartDashboard.putNumber("m_y_target", m_y_target);
+ SmartDashboard.putNumber("x_last_check", x_pose_last_check);
     // TODO: Use cameraAngleOffset and a rotation matrix for conversions
     // Note the negatives in the equations below change this to a -90deg rotation
-    double pid_x = m_visionSwerveController_x.calculate(-x_pose, m_y_target - x_pose_last_check);
+    //.calculate(measurement, setpoint)
+    double pid_x = m_visionSwerveController_x.calculate(x_pose, m_y_target + x_pose_last_check);
     double pid_y = m_visionSwerveController_y.calculate(y_pose, -m_x_target + y_pose_last_check);
     double pid_rot = m_visionSwerveController_rot.calculate(Math.toRadians(rot_pose), Math.toRadians((m_rot_target + rot_pose_last_check) % 360));
-    if(Math.abs(x_pose-(-m_y_target + x_pose_last_check)) < 0.02) 
-              isReachX = true;
+    // if(Math.abs(x_pose-(-m_y_target + x_pose_last_check)) < 0.02) 
+    //           isReachX = true;
 
-    if(Math.abs(y_pose-(-m_x_target + y_pose_last_check)) < 0.02) 
-              isReachY = true;
+    // if(Math.abs(y_pose-(-m_x_target + y_pose_last_check)) < 0.02) 
+    //           isReachY = true;
+ SmartDashboard.putNumber("rot_error", Math.toDegrees(m_visionSwerveController_rot.getError()));
+ SmartDashboard.putNumber("m_rot_target", m_rot_target);
+ SmartDashboard.putNumber("rot_pose_last_check", rot_pose_last_check);
+
+    SmartDashboard.putNumber("deltaposetargetx", m_visionSwerveController_x.getError()); // -x_pose-(m_y_target - x_pose_last_check)
+    SmartDashboard.putNumber("deltaposetargety", m_visionSwerveController_y.getError());
+    SmartDashboard.putNumber("pidxtarget", m_y_target - x_pose_last_check);
+    SmartDashboard.putNumber("pidytarget", -m_x_target + y_pose_last_check);
 
     pid_x = isReachX ? 0 : pid_x;
     pid_y = isReachY ? 0 : pid_y;

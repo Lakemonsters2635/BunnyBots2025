@@ -65,6 +65,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return m_visionAutoCommand;
+    return new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 8, 5, -24, 0.0001);
   }
 }
+
+
