@@ -34,6 +34,8 @@ public class VisionAutoCommand extends Command{
   
     //Some of the variables arent used outside of the constructor so can be deleted but keeping it for debugging and future use
     private double m_x_start, m_y_start, m_rot_start; 
+
+    boolean isReachX = false, isReachY = false;
   
     //Probably need to fine tune constants depending on the bot
     private final PIDController m_visionSwerveController_x = new PIDController(10, 0, 0); 
@@ -92,14 +94,19 @@ public class VisionAutoCommand extends Command{
         m_ots.data();
         Pose2d tempTargetPose = visionAutoData(m_xPrime, m_zPrime, m_finalYa, m_tagID) ;
         SmartDashboard.putBoolean("isNull", tempTargetPose == null);
-        targetPose = tempTargetPose == null ? targetPose : tempTargetPose;
-        m_x_target = targetPose.getX();
-        m_y_target = targetPose.getY();
-        m_rot_target = targetPose.getRotation().getDegrees();
+        // This if statement will run only if we are able to see the april tag
+        if(tempTargetPose != null){
+          targetPose = tempTargetPose;
 
-        x_pose_last_check = m_dts.getPose().getX();
-        y_pose_last_check = m_dts.getPose().getY();
-        rot_pose_last_check = m_dts.getPose().getRotation().getDegrees();
+          m_x_target = targetPose.getX();
+          m_y_target = targetPose.getY();
+          m_rot_target = targetPose.getRotation().getDegrees();
+
+          // Stores the latest robot position we were able to see the april tag
+          x_pose_last_check = m_dts.getPose().getX();
+          y_pose_last_check = m_dts.getPose().getY();
+          rot_pose_last_check = m_dts.getPose().getRotation().getDegrees();
+        }        
     } catch (Exception e) {
         System.out.println(e);
     }
@@ -109,25 +116,38 @@ public class VisionAutoCommand extends Command{
     double rot_pose = m_dts.getPose().getRotation().getDegrees();
 
     /*
-     * x_pose= robot's current x position
-     * When see april tag:
-     * x_pose = x_pose_last_check
-     * 
-     * When not see april tag:
-     * x_pose_last_check = last robot position when able to see apriltag
-     */
+    * x_pose= robot's current x position
+    * When see april tag:
+    * x_pose = x_pose_last_check
+    * 
+    * When not see april tag:
+    * x_pose_last_check = last robot position when able to see apriltag
+    */
 
-     SmartDashboard.putNumber("deltaPosePosex", x_pose-x_pose_last_check);
-     SmartDashboard.putNumber("deltaPosePosey", y_pose-y_pose_last_check);
+    SmartDashboard.putNumber("deltaPosePosex", x_pose-x_pose_last_check);
+    SmartDashboard.putNumber("deltaPosePosey", y_pose-y_pose_last_check);
 
-     SmartDashboard.putNumber("deltaposetargetx", x_pose-(-m_y_target + x_pose_last_check));
-     SmartDashboard.putNumber("deltaposetargety", y_pose-(-m_x_target + y_pose_last_check));
+    SmartDashboard.putNumber("deltaposetargetx", m_y_target-(x_pose_last_check- x_pose)); // -x_pose-(m_y_target - x_pose_last_check)
+    SmartDashboard.putNumber("deltaposetargety", y_pose-(-m_x_target + y_pose_last_check));
 
+    // TODO: Use cameraAngleOffset and a rotation matrix for conversions
+    // Note the negatives in the equations below change this to a -90deg rotation
     double pid_x = m_visionSwerveController_x.calculate(-x_pose, m_y_target - x_pose_last_check);
     double pid_y = m_visionSwerveController_y.calculate(y_pose, -m_x_target + y_pose_last_check);
     double pid_rot = m_visionSwerveController_rot.calculate(Math.toRadians(rot_pose), Math.toRadians((m_rot_target + rot_pose_last_check) % 360));
+    if(Math.abs(x_pose-(-m_y_target + x_pose_last_check)) < 0.02) 
+              isReachX = true;
 
+    if(Math.abs(y_pose-(-m_x_target + y_pose_last_check)) < 0.02) 
+              isReachY = true;
+
+    pid_x = isReachX ? 0 : pid_x;
+    pid_y = isReachY ? 0 : pid_y;
     double pid_c = Math.hypot(pid_x, pid_y);
+
+    SmartDashboard.putNumber("deltaposetargetRot", m_visionSwerveController_rot.getError());
+    SmartDashboard.putNumber("deltaposetargetx", m_visionSwerveController_x.getError());
+    // double pid_c_clamp = 
     // double x_clamp = pid_c > speed_clamp ? (speed_clamp * (Math.abs(pid_x) / pid_c)) : speed_clamp;
     // double y_clamp = pid_c > speed_clamp ? (speed_clamp * (Math.abs(pid_y) / pid_c)) : speed_clamp;
 
@@ -136,8 +156,8 @@ public class VisionAutoCommand extends Command{
     // double m_fb_y = MathUtil.clamp(pid_y, -y_clamp, y_clamp);
     // double m_fb_rot = MathUtil.clamp(pid_rot, -PURE_VISION_MAX_RAD_PER_SEC, PURE_VISION_MAX_RAD_PER_SEC);
 
-    double m_fb_x = MathUtil.clamp(pid_x/pid_c * .1, -.1, .1);
-    double m_fb_y = MathUtil.clamp(pid_y/pid_c * .1, -.1, .1);
+    double m_fb_x = MathUtil.clamp(pid_x/pid_c * .2, -.2, .2);
+    double m_fb_y = MathUtil.clamp(pid_y/pid_c * .2, -.2, .2);
     double m_fb_rot = MathUtil.clamp(pid_rot/4, -Math.PI/4, Math.PI/4);
 
     SmartDashboard.putNumber("pid_x", pid_x);
@@ -145,7 +165,7 @@ public class VisionAutoCommand extends Command{
 
     SmartDashboard.putNumber("m_fb_x", m_fb_x);
     SmartDashboard.putNumber("m_fb_y", m_fb_y);
-    m_dts.drive(m_fb_x, m_fb_y, 0, true);
+    m_dts.drive(m_fb_x, m_fb_y, m_fb_rot, true);
     updateDashboard();
     // m_dts.drive(m_fb_x, m_fb_y, m_fb_rot, true);
   }
@@ -170,9 +190,12 @@ public class VisionAutoCommand extends Command{
     } 
 
     //If conditions are met
-    return Math.abs(m_x_target - x) < 0.01 && 
-           Math.abs(m_y_target - y) < 0.01 && 
-           Math.abs((m_rot_target - rot) % 360) < 3;
+    return Math.abs(m_visionSwerveController_x.getError()) < 0.04 &&
+           Math.abs(m_visionSwerveController_y.getError()) < 0.04 &&
+    // Math.abs(m_y_target-(x_pose_last_check-x)) < 0.04 && 
+          //  Math.abs(y-(-m_x_target + y_pose_last_check)) < 0.04 &&
+           Math.abs(m_visionSwerveController_rot.getError()) < (3.0 / 180.0 * Math.PI);
+          //  && Math.abs(((m_rot_target + rot_pose_last_check) % 360 - rot) % 360) < 3;
           //  && Math.abs(m_dts.getYawGyroValue()) < 10;
   }
 
@@ -199,8 +222,8 @@ public class VisionAutoCommand extends Command{
     double x_vt = xPrime * Math.cos(Math.toRadians(visionYa)) - zPrime * Math.sin(Math.toRadians(visionYa));
     double z_vt = xPrime * Math.sin(Math.toRadians(visionYa)) + zPrime * Math.cos(Math.toRadians(visionYa));
     //Should be offset variables and change based of camera location relative to the center of the robot
-    double deltaRobotX = -(detection.x + x_vt - 5);
-    double deltaRobotY = -(detection.z + z_vt - 14);
+    double deltaRobotX = -(detection.x + x_vt - Constants.CAM_X_OFFSET);
+    double deltaRobotY = -(detection.z + z_vt - Constants.CAM_Y_OFFSET);
 
     // double deltaRobotX = -(detection.x + x_vt - Constants.VISION_TOTE_CAM_OFFSET[0]);
     // double deltaRobotY = -(detection.z + z_vt - Constants.VISION_TOTE_CAM_OFFSET[1]);

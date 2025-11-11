@@ -64,5 +64,11 @@ public class Constants {
     // JOYSTICKS
     public static final int LEFT_JOYSTICK_PORT = 0; // TODO: set correct ports
     public static final int RIGHT_JOYSTICK_PORT = 1;
+
+    //VISION AUTO COMMAND
+    // TODO: VisionAutoData assumes only a single camera
+    public static final int CAM_X_OFFSET = 0;
+    public static final int CAM_Y_OFFSET = 0;
+    public static final int CAM_ANGLE_OFFSET = 0; // Rad // TODO: Code currently assumes the camera is facing forward
 }
     
