@@ -3,6 +3,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,6 +27,8 @@ public class VisionAutoCommand extends Command{
     private double m_x_target;
     private double m_y_target;
     private double m_rot_target;
+    
+    private double m_cameraRotation; 
     Pose2d targetPose;
 
     double x_pose_last_check;
@@ -48,13 +51,14 @@ public class VisionAutoCommand extends Command{
     private final Trigger cancelTeleAuto = new JoystickButton(RobotContainer.rightJoystick, 6); //Button in case visionAuto goes haywire
 
     //Constructor for a visionAutoCommand
-    public VisionAutoCommand(DrivetrainSubsystem drivetrainSubsystem, ObjectTrackerSubsystem objectTrackerSubsystem, int tagID, double xPrime, double zPrime, double finalYa) {
+    public VisionAutoCommand(DrivetrainSubsystem drivetrainSubsystem, ObjectTrackerSubsystem objectTrackerSubsystem, int tagID, double xPrime, double zPrime, double finalYa, double cameraRotation) {
       m_dts = drivetrainSubsystem;
       m_ots = objectTrackerSubsystem;
       this.m_tagID = tagID;
       m_xPrime = xPrime;
       m_zPrime = zPrime;
       m_finalYa = finalYa;
+      m_cameraRotation = cameraRotation;
       // YOLO_object = yoloObject;
   
     //   targetPose = visionAutoData(xPrime, zPrime, finalYa, tagID);
@@ -87,6 +91,8 @@ public class VisionAutoCommand extends Command{
 
     m_visionSwerveController_rot.enableContinuousInput(-180, 180);
   }
+
+  
 
   @Override
   public void execute() {
@@ -133,8 +139,9 @@ public class VisionAutoCommand extends Command{
     // TODO: Use cameraAngleOffset and a rotation matrix for conversions
     // Note the negatives in the equations below change this to a -90deg rotation
     //.calculate(measurement, setpoint)
-    double pid_x = m_visionSwerveController_x.calculate(x_pose, m_y_target + x_pose_last_check);
-    double pid_y = m_visionSwerveController_y.calculate(y_pose, -m_x_target + y_pose_last_check);
+    Translation2d transformedTargetPose = applyRotationMatrix(m_x_target, m_y_target);
+    double pid_x = m_visionSwerveController_x.calculate(x_pose, transformedTargetPose.getX() + x_pose_last_check);
+    double pid_y = m_visionSwerveController_y.calculate(y_pose, transformedTargetPose.getY() + y_pose_last_check);
     double pid_rot = m_visionSwerveController_rot.calculate(Math.toRadians(rot_pose), Math.toRadians((m_rot_target + rot_pose_last_check) % 360));
     // if(Math.abs(x_pose-(-m_y_target + x_pose_last_check)) < 0.02) 
     //           isReachX = true;
@@ -243,6 +250,21 @@ public class VisionAutoCommand extends Command{
     double finalAngle = visionYa + finalYa + Units.radiansToDegrees(botRadians);
 
     return new Pose2d(Units.inchesToMeters(deltaFieldX), Units.inchesToMeters(deltaFieldY), new Rotation2d(Units.degreesToRadians(finalAngle)));
+  }
+
+  public Translation2d applyRotationMatrix(double targetX, double targetY){
+    //targetY is y for rotation matrix
+    //targetX is x for rotation  matrix
+
+    //transformedX = xcos(theta) - ysin(theta)
+    //transfromedY = xsin(theta) + ycos(theta)
+
+    double transformedX = (targetX * Math.cos(Math.toRadians(m_cameraRotation))) - (targetY * Math.sin(Math.toRadians(m_cameraRotation)));
+    double transformedY = (targetX * Math.sin(Math.toRadians(m_cameraRotation))) + (targetY * Math.cos(Math.toRadians(m_cameraRotation)));
+
+    //the rotation does not matter because we use finalYa
+    //the transfromedX and Y are used instead of 
+    return new Translation2d(transformedX, transformedY);
   }
 
   private void updateDashboard() {
