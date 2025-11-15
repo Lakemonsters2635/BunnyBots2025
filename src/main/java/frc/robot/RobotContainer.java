@@ -32,6 +32,8 @@ public class RobotContainer {
 
   public static VisionAutoCommand m_visionAutoCommand = new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 8, 5, -24, 0.0001,90);
 
+  public static Autos m_autos = new Autos(m_drivetrainSubsystem);
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   
 
