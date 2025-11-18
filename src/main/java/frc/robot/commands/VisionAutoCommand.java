@@ -38,7 +38,7 @@ public class VisionAutoCommand extends Command{
     //Some of the variables arent used outside of the constructor so can be deleted but keeping it for debugging and future use
     private double m_x_start, m_y_start, m_rot_start; 
 
-    boolean isReachX = false, isReachY = false;
+    boolean isReachX = false, isReachY = false, isReachRot = false;
   
     //Probably need to fine tune constants depending on the bot
     private final PIDController m_visionSwerveController_x = new PIDController(10, 0, 0); 
@@ -143,11 +143,14 @@ public class VisionAutoCommand extends Command{
     double pid_x = m_visionSwerveController_x.calculate(x_pose, transformedTargetPose.getX() + x_pose_last_check);
     double pid_y = m_visionSwerveController_y.calculate(y_pose, transformedTargetPose.getY() + y_pose_last_check);
     double pid_rot = m_visionSwerveController_rot.calculate(Math.toRadians(rot_pose), Math.toRadians((m_rot_target + rot_pose_last_check) % 360));
-    // if(Math.abs(x_pose-(-m_y_target + x_pose_last_check)) < 0.02) 
-    //           isReachX = true;
+    if(Math.abs(m_visionSwerveController_x.getError()) < 0.02) 
+              isReachX = true;
 
-    // if(Math.abs(y_pose-(-m_x_target + y_pose_last_check)) < 0.02) 
-    //           isReachY = true;
+    if(Math.abs(m_visionSwerveController_y.getError()) < 0.02) 
+              isReachY = true;
+    if(Math.abs(Math.toDegrees(m_visionSwerveController_rot.getError())) < 3){
+      isReachRot = true;
+    }
  SmartDashboard.putNumber("rot_error", Math.toDegrees(m_visionSwerveController_rot.getError()));
  SmartDashboard.putNumber("m_rot_target", m_rot_target);
  SmartDashboard.putNumber("rot_pose_last_check", rot_pose_last_check);
@@ -157,8 +160,17 @@ public class VisionAutoCommand extends Command{
     SmartDashboard.putNumber("pidxtarget", m_y_target - x_pose_last_check);
     SmartDashboard.putNumber("pidytarget", -m_x_target + y_pose_last_check);
 
-    pid_x = isReachX ? 0 : pid_x;
-    pid_y = isReachY ? 0 : pid_y;
+    SmartDashboard.putBoolean("isReachRot", isReachRot);
+    SmartDashboard.putBoolean("isReachX", isReachX);
+    SmartDashboard.putBoolean("isReachY", isReachY);
+
+    pid_rot = isReachRot ? 0 : pid_rot;
+    if(isReachRot && isReachX){
+      pid_x = 0;
+    }
+    if(isReachRot && isReachY){
+      pid_y = 0;
+    }
     double pid_c = Math.hypot(pid_x, pid_y);
 
     SmartDashboard.putNumber("deltaposetargetRot", m_visionSwerveController_rot.getError());
@@ -172,8 +184,8 @@ public class VisionAutoCommand extends Command{
     // double m_fb_y = MathUtil.clamp(pid_y, -y_clamp, y_clamp);
     // double m_fb_rot = MathUtil.clamp(pid_rot, -PURE_VISION_MAX_RAD_PER_SEC, PURE_VISION_MAX_RAD_PER_SEC);
 
-    double m_fb_x = MathUtil.clamp(pid_x/pid_c * .2, -.2, .2);
-    double m_fb_y = MathUtil.clamp(pid_y/pid_c * .2, -.2, .2);
+    double m_fb_x = MathUtil.clamp(pid_x/pid_c * .5, -.5, .5);
+    double m_fb_y = MathUtil.clamp(pid_y/pid_c * .5, -.5, .5);
     double m_fb_rot = MathUtil.clamp(pid_rot/4, -Math.PI/4, Math.PI/4);
 
     SmartDashboard.putNumber("pid_x", pid_x);
@@ -206,13 +218,14 @@ public class VisionAutoCommand extends Command{
     } 
 
     //If conditions are met
-    return Math.abs(m_visionSwerveController_x.getError()) < 0.04 &&
-           Math.abs(m_visionSwerveController_y.getError()) < 0.04 &&
-    // Math.abs(m_y_target-(x_pose_last_check-x)) < 0.04 && 
-          //  Math.abs(y-(-m_x_target + y_pose_last_check)) < 0.04 &&
-           Math.abs(m_visionSwerveController_rot.getError()) < (3.0 / 180.0 * Math.PI);
-          //  && Math.abs(((m_rot_target + rot_pose_last_check) % 360 - rot) % 360) < 3;
-          //  && Math.abs(m_dts.getYawGyroValue()) < 10;
+    return isReachRot && isReachX && isReachY;
+    // return Math.abs(m_visionSwerveController_x.getError()) < 0.04 &&
+    //        Math.abs(m_visionSwerveController_y.getError()) < 0.04 &&
+    // // Math.abs(m_y_target-(x_pose_last_check-x)) < 0.04 && 
+    //       //  Math.abs(y-(-m_x_target + y_pose_last_check)) < 0.04 &&
+    //        Math.abs(m_visionSwerveController_rot.getError()) < (3.0 / 180.0 * Math.PI);
+    //       //  && Math.abs(((m_rot_target + rot_pose_last_check) % 360 - rot) % 360) < 3;
+    //       //  && Math.abs(m_dts.getYawGyroValue()) < 10;
   }
 
   private Pose2d visionAutoData(double xPrime, double zPrime, double finalYa, int tagId) {

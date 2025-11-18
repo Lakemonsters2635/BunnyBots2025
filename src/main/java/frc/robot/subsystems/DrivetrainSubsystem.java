@@ -351,10 +351,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("yPowerCommanded", yPowerCommanded);
         
         // TODO: Uncomment this after auto test:
-        // this.drive(xPowerCommanded * DrivetrainSubsystem.kMaxSpeed, 
-        //         yPowerCommanded * DrivetrainSubsystem.kMaxSpeed,
-        //         MathUtil.applyDeadband(rotCommanded * this.kMaxAngularSpeed, 0.2),
-        //         true);
+        this.drive(xPowerCommanded * DrivetrainSubsystem.kMaxSpeed, 
+                yPowerCommanded * DrivetrainSubsystem.kMaxSpeed,
+                MathUtil.applyDeadband(rotCommanded * this.kMaxAngularSpeed, 0.2),
+                true);
       // }
     }
     
