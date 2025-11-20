@@ -35,7 +35,7 @@ public class OuttakeBack extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_outtakeSubsystem.getPos()<.9){
+    if(m_outtakeSubsystem.getPos()<1){
       return true;
     }
     return false;

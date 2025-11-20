@@ -15,7 +15,7 @@ public class OuttakeSubsystem extends SubsystemBase {
   TalonFX outTakeMotor;
 
   public OuttakeSubsystem() {
-    outTakeMotor = new TalonFX(21); 
+    outTakeMotor = new TalonFX(12); 
   }
 
   public void motorOutTake() {
@@ -23,7 +23,7 @@ public class OuttakeSubsystem extends SubsystemBase {
   }
 
   public void motorMoveBack(){
-    outTakeMotor.setVoltage(-4);
+    outTakeMotor.setVoltage(-2);
   }
 
   public void stopmotorOutTake() {

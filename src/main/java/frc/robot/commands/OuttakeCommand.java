@@ -38,7 +38,7 @@ public class OuttakeCommand extends Command {
   @Override
   public boolean isFinished() {
     // TODO: change limit value(0) later when tested
-    if(m_outtakeSubsystem.getPos() >  1.1){ // Hard stop at 2.03
+    if(m_outtakeSubsystem.getPos() >  1.3){ // Hard stop at 2.03
       return true;
     }
     return false;
