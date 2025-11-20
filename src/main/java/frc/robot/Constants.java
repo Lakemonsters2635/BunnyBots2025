@@ -60,6 +60,11 @@ public class Constants {
     public static final int HAT_POV_180 = 180; // Left hat down
     public static final int HAT_POV_ROTATE_LEFT = 270;
     public static final int HAT_POV_ROTATE_RIGHT = 90;
+
+    //Outtake
+    public static final int OUTTAKE_VOLTAGE = 1; //TODO: CHANGE VALUE WHEN TESTED
+    public static final int INTAKE_VOLTAGE = 1;
+
     
     // JOYSTICKS
     public static final int LEFT_JOYSTICK_PORT = 0; // TODO: set correct ports
