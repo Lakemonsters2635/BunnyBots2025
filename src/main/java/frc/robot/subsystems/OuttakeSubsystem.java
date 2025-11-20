@@ -4,18 +4,32 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class OuttakeSubsystem extends SubsystemBase {
   /** Creates a new OuttakeSubsystem. */
-  
+
+  PhoenixPIDController pidController = new PhoenixPIDController(0,0,0);
+
+  Slot0Configs slot0Configs = new Slot0Configs();
+  final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
+
   TalonFX outTakeMotor;
 
   public OuttakeSubsystem() {
     outTakeMotor = new TalonFX(12); 
+    slot0Configs.kP = 0.1;
+    slot0Configs.kI = 0;
+    slot0Configs.kD = 0;
+
+    outTakeMotor.getConfigurator().apply(slot0Configs);
+    outTakeMotor.setControl(m_request.withPosition(4));
   }
 
   public void motorOutTake() {
