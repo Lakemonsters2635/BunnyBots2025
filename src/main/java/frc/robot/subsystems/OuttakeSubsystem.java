@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class OuttakeSubsystem extends SubsystemBase {
   /** Creates a new OuttakeSubsystem. */
 
-  PhoenixPIDController pidController = new PhoenixPIDController(0,0,0);
+  // PhoenixPIDController pidController = new PhoenixPIDController(0,0,0);
 
   Slot0Configs slot0Configs = new Slot0Configs();
   final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
@@ -24,16 +24,17 @@ public class OuttakeSubsystem extends SubsystemBase {
 
   public OuttakeSubsystem() {
     outTakeMotor = new TalonFX(12); 
-    slot0Configs.kP = 0.1;
+    slot0Configs.kP = 15;
     slot0Configs.kI = 0;
-    slot0Configs.kD = 0;
+    slot0Configs.kD = 0.1;
+    slot0Configs.kG = 0;
 
     outTakeMotor.getConfigurator().apply(slot0Configs);
-    outTakeMotor.setControl(m_request.withPosition(4));
+    outTakeMotor.setControl(m_request.withPosition(1.8));
   }
 
   public void motorOutTake() {
-    outTakeMotor.setVoltage(10);
+    outTakeMotor.setVoltage(5);
   }
 
   public void motorMoveBack(){
@@ -55,5 +56,6 @@ public class OuttakeSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("outtakeMotorVoltage", outTakeMotor.getMotorVoltage().getValueAsDouble());
     SmartDashboard.putNumber("OuttakeCurrentSupply", outTakeMotor.getSupplyCurrent().getValueAsDouble());
     SmartDashboard.putNumber("OuttakeCurrentStator", outTakeMotor.getStatorCurrent().getValueAsDouble());
+    SmartDashboard.putNumber("outtakeRPM", outTakeMotor.getVelocity().getValueAsDouble());
   }
 }
