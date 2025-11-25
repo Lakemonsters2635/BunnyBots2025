@@ -26,13 +26,13 @@ public class OuttakeSubsystem extends SubsystemBase {
   public OuttakeSubsystem() {
     outTakeMotor = new TalonFX(12);
     initialEncoderValue = outTakeMotor.getPosition().getValueAsDouble();
-    slot0Configs.kP = 15;
+    slot0Configs.kP = 20;
     slot0Configs.kI = 0;
     slot0Configs.kD = 0.1;
     slot0Configs.kG = 0;
 
     outTakeMotor.getConfigurator().apply(slot0Configs);
-    outTakeMotor.setControl(m_request.withPosition(1.8 - initialEncoderValue));
+    outTakeMotor.setControl(m_request.withPosition(2.2 - initialEncoderValue));
   }
 
   public void motorOutTake() {
