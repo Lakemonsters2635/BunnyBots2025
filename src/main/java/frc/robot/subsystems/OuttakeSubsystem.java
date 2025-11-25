@@ -19,18 +19,20 @@ public class OuttakeSubsystem extends SubsystemBase {
 
   Slot0Configs slot0Configs = new Slot0Configs();
   final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
+  double initialEncoderValue;
 
   TalonFX outTakeMotor;
 
   public OuttakeSubsystem() {
-    outTakeMotor = new TalonFX(12); 
+    outTakeMotor = new TalonFX(12);
+    initialEncoderValue = outTakeMotor.getPosition().getValueAsDouble();
     slot0Configs.kP = 15;
     slot0Configs.kI = 0;
     slot0Configs.kD = 0.1;
     slot0Configs.kG = 0;
 
     outTakeMotor.getConfigurator().apply(slot0Configs);
-    outTakeMotor.setControl(m_request.withPosition(1.8));
+    outTakeMotor.setControl(m_request.withPosition(1.8 - initialEncoderValue));
   }
 
   public void motorOutTake() {
@@ -46,7 +48,7 @@ public class OuttakeSubsystem extends SubsystemBase {
 
   }
   public double getPos(){
-    return outTakeMotor.getPosition().getValueAsDouble();
+    return outTakeMotor.getPosition().getValueAsDouble() - initialEncoderValue;
   }
   @Override
   public void periodic() {
