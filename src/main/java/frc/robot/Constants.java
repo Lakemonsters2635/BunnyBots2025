@@ -64,6 +64,7 @@ public class Constants {
     //Outtake
     public static final int OUTTAKE_VOLTAGE = 1; //TODO: CHANGE VALUE WHEN TESTED
     public static final int INTAKE_VOLTAGE = 1;
+    public static final double TARGET_ANGLE = 2;
 
     
     // JOYSTICKS

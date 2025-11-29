@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import org.ejml.interfaces.decomposition.TridiagonalSimilarDecomposition_F64;
+
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -20,24 +22,34 @@ public class OuttakeSubsystem extends SubsystemBase {
   Slot0Configs slot0Configs = new Slot0Configs();
   final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
   double initialEncoderValue;
-
+  double targetPose;
   TalonFX outTakeMotor;
 
   public OuttakeSubsystem() {
     outTakeMotor = new TalonFX(12);
     initialEncoderValue = outTakeMotor.getPosition().getValueAsDouble();
-    slot0Configs.kP = 20;
+    slot0Configs.kP = 10;
     slot0Configs.kI = 0;
     slot0Configs.kD = 0.1;
     slot0Configs.kG = 0;
 
     outTakeMotor.getConfigurator().apply(slot0Configs);
-    outTakeMotor.setControl(m_request.withPosition(2.2 - initialEncoderValue));
   }
+
+  public void setAngle(double targetPos){
+    //in raw encoder counts
+    targetPose = targetPos - initialEncoderValue;
+    outTakeMotor.setControl(m_request.withPosition(targetPose));
+  }
+
+  // public boolean isAtPosition(){
+  //   if(Math.abs())
+  // }
 
   public void motorOutTake() {
     outTakeMotor.setVoltage(5);
   }
+
 
   public void motorMoveBack(){
     outTakeMotor.setVoltage(-2);

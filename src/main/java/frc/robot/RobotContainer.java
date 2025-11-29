@@ -12,6 +12,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -58,7 +59,8 @@ public class RobotContainer {
 
     Trigger outtakeTrigger = new JoystickButton(leftJoystick, 1);
 
-    outtakeTrigger.onTrue(new SequentialCommandGroup(m_outtakeCommand, m_outtakeBack));
+    // outtakeTrigger.onTrue(new SequentialCommandGroup(m_outtakeCommand, m_outtakeBack));
+    outtakeTrigger.onTrue(new InstantCommand(()->m_outtakeSubsystem.setAngle(Constants.TARGET_ANGLE)));
 
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
