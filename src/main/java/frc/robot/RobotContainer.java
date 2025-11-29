@@ -60,7 +60,8 @@ public class RobotContainer {
     Trigger outtakeTrigger = new JoystickButton(leftJoystick, 1);
 
     // outtakeTrigger.onTrue(new SequentialCommandGroup(m_outtakeCommand, m_outtakeBack));
-    outtakeTrigger.onTrue(new InstantCommand(()->m_outtakeSubsystem.setAngle(Constants.TARGET_ANGLE)));
+    // outtakeTrigger.onTrue(new InstantCommand(()->m_outtakeSubsystem.setAngle(Constants.SHOOTER_TARGET_DELTA_ANGLE)));
+    outtakeTrigger.onTrue(new SequentialCommandGroup(m_outtakeCommand, m_outtakeBack));
 
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
