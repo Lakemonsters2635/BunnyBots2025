@@ -69,10 +69,11 @@ public class Constants {
     public static final double SHOOTER_I = 0;
     public static final double SHOOTER_D = .1;
 
-
-    
     // JOYSTICKS
-    public static final int LEFT_JOYSTICK_PORT = 0; // TODO: set correct ports
+    public static final int LEFT_JOYSTICK_PORT = 0;
     public static final int RIGHT_JOYSTICK_PORT = 1;
+
+    // BUTTONS
+    public static final int SHOOTER_BUTTON = 1; // TODO: set correct buttons
 }
     

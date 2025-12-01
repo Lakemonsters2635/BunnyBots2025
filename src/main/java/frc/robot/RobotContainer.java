@@ -57,7 +57,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    Trigger outtakeTrigger = new JoystickButton(leftJoystick, 1);
+    Trigger outtakeTrigger = new JoystickButton(leftJoystick, Constants.SHOOTER_BUTTON);
 
     // outtakeTrigger.onTrue(new SequentialCommandGroup(m_outtakeCommand, m_outtakeBack));
     // outtakeTrigger.onTrue(new InstantCommand(()->m_outtakeSubsystem.setAngle(Constants.SHOOTER_TARGET_DELTA_ANGLE)));

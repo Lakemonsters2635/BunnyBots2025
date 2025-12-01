@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,7 +31,7 @@ public class OuttakeCommand extends Command {
     m_outtakeSubsystem.setAngle(Constants.SHOOTER_TARGET_DELTA_ANGLE);
     timer.reset();
     timer.start();
-    SmartDashboard.putBoolean("isFin", false);
+    // SmartDashboard.putBoolean("isFin", false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,11 +42,10 @@ public class OuttakeCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     m_outtakeSubsystem.setPID(0, 0, 0);
-    // m_outtakeSubsystem.setAngle(m_outtakeSubsystem.initialEncoderValue + .2);
     timer.stop();
   }
 
-  // TODO: Move to a math tools library
+  // TODO: Move to a math tools library, see the commented in isFinished()
   public boolean isCloseTo(double target, double ref, double threshold){
     return Math.abs(target - ref) < threshold;
   }
@@ -54,9 +54,15 @@ public class OuttakeCommand extends Command {
   @Override
   public boolean isFinished() {
     // TODO: change limit value(0) later when tested
+    // if(MathUtil.isNear(Constants.SHOOTER_TARGET_DELTA_ANGLE, m_outtakeSubsystem.getPosCalibrated(),  .2)
+    //     && (timer.get() > .2)){
+    //   SmartDashboard.putBoolean("isFin", true);
+    //   return true;
+    // }
+
     if( isCloseTo(Constants.SHOOTER_TARGET_DELTA_ANGLE, m_outtakeSubsystem.getPosCalibrated(),  .2)
         && (timer.get() > .2)){
-      SmartDashboard.putBoolean("isFin", true);
+      // SmartDashboard.putBoolean("isFin", true);
       return true;
     }
     return false;

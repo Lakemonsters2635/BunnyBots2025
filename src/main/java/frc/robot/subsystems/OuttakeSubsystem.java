@@ -29,9 +29,6 @@ public class OuttakeSubsystem extends SubsystemBase {
   public OuttakeSubsystem() {
     outTakeMotor = new TalonFX(12);
     initialEncoderValue = outTakeMotor.getPosition().getValueAsDouble();
-    // slot0Configs.kP = 12;
-    // slot0Configs.kI = 0;
-    // slot0Configs.kD = 0.1;
     slot0Configs.kG = 0;
     setPID(Constants.SHOOTER_P, Constants.SHOOTER_I, Constants.SHOOTER_D);
 
@@ -49,10 +46,6 @@ public class OuttakeSubsystem extends SubsystemBase {
     targetPose = deltaPos + initialEncoderValue;
     outTakeMotor.setControl(m_request.withPosition(targetPose));
   }
-
-  // public boolean isAtPosition(){
-  //   if(Math.abs())
-  // }
 
   public double getTargetPos(){
     return Constants.SHOOTER_TARGET_DELTA_ANGLE;
