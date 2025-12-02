@@ -54,7 +54,7 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-   Trigger indexButton = new JoystickButton(leftJoystick, Constants.Intake_ID);
+   Trigger indexButton = new JoystickButton(leftJoystick, Constants.INTAKE_BUTTON);
    indexButton.whileTrue(m_intakeCommand);
     
   }

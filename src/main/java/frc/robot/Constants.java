@@ -71,7 +71,7 @@ public class Constants {
     public static final double INTAKE_MOTOR_VOLTAGE = 0.1;//TODO: change voltage for when we actully have a robot
 
     //BUTTONS
-    public static final int Intake_ID = 4;// TODO: change ID when given robot
+    public static final int INTAKE_BUTTON = 4;// TODO: change ID when given robot
     
 }
 
