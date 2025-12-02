@@ -72,8 +72,8 @@ public class ObjectTrackerSubsystem extends SubsystemBase {
     private double m_cameraPitch; 
 
     // rotation matrix
-    private double cameraTilt= 0.0 * Math.PI / 180.0;
-    private double[] cameraOffset = {0.0, 0.0}; // goes {x, y, z} // In inches // TODO: figure this offset
+    private double cameraTilt = Constants.CAMERA_TILT;
+    private double[] cameraOffset = Constants.CAMERA_OFFSET; // goes {x, y} // In inches // TODO: figure this offset
 
     private double sinTheta;
     private double cosTheta;
@@ -84,8 +84,6 @@ public class ObjectTrackerSubsystem extends SubsystemBase {
 	// Put methods for controlling this subsystem
     // here. Call these from Commands.
 	public ObjectTrackerSubsystem(String source){
-        SmartDashboard.putBoolean("AlgaeVisible", false); // Default value for reporting to Elastic
-
         NetworkTableInstance inst = NetworkTableInstance.getDefault();
         this.source = source; 
         monsterVision = inst.getTable("MonsterVision");
@@ -104,14 +102,7 @@ public class ObjectTrackerSubsystem extends SubsystemBase {
         cosTheta = Math.cos(cameraTilt);
 
         yoloObjects = new DetectionList();
-        aprilTags = new DetectionList();
-
-        // monsterVision.addEntryListener(
-        //     "ObjectTracker",
-        //     (monsterVision, key, entry, value, flags) -> {
-        //    System.out.println("ObjectTracker changed value: " + value.getValue());
-        // }, 
-        // EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);          
+        aprilTags = new DetectionList();       
     }
     
     
@@ -153,11 +144,6 @@ public class ObjectTrackerSubsystem extends SubsystemBase {
             // System.out.println(e);
         }
 
-        try {
-            // System.out.println(getSpecificAprilTag(14).objectLabel);
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
         return ;
     }
 
@@ -166,7 +152,6 @@ public class ObjectTrackerSubsystem extends SubsystemBase {
         try{
             visionX = getNearestAprilTagDetection().x;
             return visionX;
-
         }
         catch(Exception e){
             return 0;
@@ -617,6 +602,15 @@ public class ObjectTrackerSubsystem extends SubsystemBase {
     //     detections.add(detection);
     // }
 
+    public Detection applyOffset(Detection detectionObject){
+        Detection offsetedDetection = detectionObject;
+        offsetedDetection.z = Math.cos(cameraTilt) * offsetedDetection.z;
+        offsetedDetection.z = offsetedDetection.z + cameraOffset[1]; // TODO: Figure out these signs
+        offsetedDetection.x = offsetedDetection.x + cameraOffset[0];
+
+        return offsetedDetection;
+    }
+
     public void updateDetections(String detectionsString, Gson gson) {
         // System.out.println(detectionsString);
         DetectionList gsonOut = gson.fromJson(detectionsString, DetectionList.class);
@@ -641,8 +635,10 @@ public class ObjectTrackerSubsystem extends SubsystemBase {
             Detection detectionObject = (Detection)gsonOut.get(i);
             SmartDashboard.putNumber("updateDetections: raw z", detectionObject.z);
             detectionObject.z = applyPitchCorrection(m_cameraPitch, detectionObject.y , detectionObject.z);
+            detectionObject = applyOffset(detectionObject);
             SmartDashboard.putNumber("updateDetections.detectionObject.z", detectionObject.z);
             if (detectionObject.objectLabel.substring(0,3).equals("tag")) {
+
                 aprilTags.add(detectionObject);
                 // aprilTags.add(adjustCamOffset(gsonOut.get(i)));
                 // System.out.println("UpdateDetections(: found apriltag");
