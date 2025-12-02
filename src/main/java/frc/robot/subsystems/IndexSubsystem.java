@@ -39,6 +39,9 @@ public void stopIndex(){
   m_indexMotor.setVoltage(0);
 }
 
+public double getPosition(){
+  return m_indexMotor.getEncoder().getPosition();
+}
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
