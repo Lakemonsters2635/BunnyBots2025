@@ -5,7 +5,7 @@ import edu.wpi.first.math.util.Units;
 public class Constants {
     // SWERVE
     public static final double kPModuleTurningController = 0.5; // 0.5
-    public static final double kPModuleDriveController = 0.5; //added random value for test
+    public static final double kPModuleDriveController = 0; //added random value for test
     
     public static final double kMaxSpeedMetersPerSecond = 6.0;//4.0;
     // TODO: 'EncoderDistancePerPulse' should be calculated based on the gearing and wheel diameter
@@ -20,21 +20,21 @@ public class Constants {
     public static final double DRIVETRAIN_WHEELBASE_WIDTH =  Units.inchesToMeters(22); //26.625
     public static final double DRIVETRAIN_WHEELBASE_LENGTH = Units.inchesToMeters(26); //19.625
 
-    public static final int DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR = 8; 
-    public static final int DRIVETRAIN_FRONT_LEFT_ANGLE_MOTOR = 7; 
+    public static final int DRIVETRAIN_FRONT_LEFT_DRIVE_MOTOR = 5; 
+    public static final int DRIVETRAIN_FRONT_LEFT_ANGLE_MOTOR = 6; 
     public static final int DRIVETRAIN_FRONT_LEFT_ANGLE_ENCODER = 2; 
 
-    public static final int DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR = 6; 
-    public static final int DRIVETRAIN_FRONT_RIGHT_ANGLE_MOTOR = 5;  
-    public static final int DRIVETRAIN_FRONT_RIGHT_ANGLE_ENCODER = 3; 
+    public static final int DRIVETRAIN_FRONT_RIGHT_DRIVE_MOTOR = 7; 
+    public static final int DRIVETRAIN_FRONT_RIGHT_ANGLE_MOTOR = 8;  
+    public static final int DRIVETRAIN_FRONT_RIGHT_ANGLE_ENCODER = 0;
 
-    public static final int DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR = 2; // TODO: set correct ports 8
-    public static final int DRIVETRAIN_BACK_LEFT_ANGLE_MOTOR = 1; // 7
-    public static final int DRIVETRAIN_BACK_LEFT_ANGLE_ENCODER = 0; // TODO: set correct ports 2
+    public static final int DRIVETRAIN_BACK_LEFT_DRIVE_MOTOR = 3; // TODO: set correct ports 8
+    public static final int DRIVETRAIN_BACK_LEFT_ANGLE_MOTOR = 4; // 7
+    public static final int DRIVETRAIN_BACK_LEFT_ANGLE_ENCODER = 1;
 
-    public static final int DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR = 4; // TODO: set correct ports 2
-    public static final int DRIVETRAIN_BACK_RIGHT_ANGLE_MOTOR = 3; // 1
-    public static final int DRIVETRAIN_BACK_RIGHT_ANGLE_ENCODER = 1; // TODO: set correct ports 0
+    public static final int DRIVETRAIN_BACK_RIGHT_DRIVE_MOTOR = 1; // TODO: set correct ports 2
+    public static final int DRIVETRAIN_BACK_RIGHT_ANGLE_MOTOR = 2; // 1
+    public static final int DRIVETRAIN_BACK_RIGHT_ANGLE_ENCODER = 3;
 
     // SWERVE MODULE STATES
     public static final int FRONT_LEFT_MODULE_STATE_INDEX = 0;
@@ -43,10 +43,10 @@ public class Constants {
     public static final int BACK_RIGHT_MODULE_STATE_INDEX = 3;
 
     // ANGLE OFFSETS
-    public static final double FRONT_LEFT_ANGLE_OFFSET = Math.toRadians(-13-90); // TODO: set correct values
-    public static final double FRONT_RIGHT_ANGLE_OFFSET = Math.toRadians(-53+90);
-    public static final double BACK_LEFT_ANGLE_OFFSET = Math.toRadians(-14+90);
-    public static final double BACK_RIGHT_ANGLE_OFFSET = Math.toRadians(75-90);
+    public static final double FRONT_LEFT_ANGLE_OFFSET = Math.toRadians(-13-90 - 2.5 + 180); // TODO: set correct values
+    public static final double FRONT_RIGHT_ANGLE_OFFSET = Math.toRadians(-53+90 - 229 + 45);
+    public static final double BACK_LEFT_ANGLE_OFFSET = Math.toRadians(-14+90 - 40 + 45 + 180);
+    public static final double BACK_RIGHT_ANGLE_OFFSET = Math.toRadians(75-90 + 3 + 180);
 
     // HAT CONSTANTS
     public static final double HAT_POWER_MOVE = 0.1;
@@ -64,5 +64,15 @@ public class Constants {
     // JOYSTICKS
     public static final int LEFT_JOYSTICK_PORT = 0; // TODO: set correct ports
     public static final int RIGHT_JOYSTICK_PORT = 1;
+
+    // VISION AUTO COMMAND
+    // TODO: VisionAutoData assumes only a single camera
+    public static final int CAM_X_OFFSET = 0;
+    public static final int CAM_Y_OFFSET = 0;
+    public static final int CAM_ANGLE_OFFSET = 0; // Rad // TODO: Code currently assumes the camera is facing forward
+
+    // OBJECT TRACKER SUBSYSTEM
+    public static final double CAMERA_TILT = 21;
+    public static final double[] CAMERA_OFFSET = {0.0, 0.0}; // offset = [x, y], In inches
 }
     

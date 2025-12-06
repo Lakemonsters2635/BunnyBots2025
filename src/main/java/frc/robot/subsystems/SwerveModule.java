@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class SwerveModule {
@@ -31,10 +32,11 @@ public class SwerveModule {
 
   private double turningMotorOffsetRadians;
 
-  private final PIDController m_drivePIDController = new PIDController(Constants.kPModuleDriveController, 0, 0);;
+  private final PIDController m_drivePIDController = new PIDController(Constants.kPModuleDriveController, 0, 0.001);
   private final PIDController m_turningPIDController = new PIDController(Constants.kPModuleTurningController, 0, 0.0001);
 
   private double m_driveMotorGain;
+  private int driveId = 0;
 
   /**
    * Constructs a SwerveModule.
@@ -53,6 +55,7 @@ public class SwerveModule {
       double driveMotorGain
       ) {
 
+      driveId = driveMotorChannel;
     m_driveMotor = new SparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new SparkMax(turningMotorChannel, MotorType.kBrushless);
 
@@ -95,6 +98,10 @@ public class SwerveModule {
     return m_turningEncoderInput.getVoltage();
   }
 
+  /*
+   * Ranges from -PI to PI
+   * I radians
+   */
   public double getTurningEncoderRadians(){
     double angle = (1.0 - (getTurningEncoderVoltage()/RobotController.getVoltage5V())) * 2.0 * Math.PI + turningMotorOffsetRadians;
     angle %= 2.0 * Math.PI;
@@ -102,7 +109,7 @@ public class SwerveModule {
         angle += 2.0 * Math.PI;
     }
 
-    return angle;
+    return angle - Math.PI;
   }
 
   public double getVelocity() {
@@ -152,12 +159,13 @@ public class SwerveModule {
     final var turnOutput =
         m_turningPIDController.calculate(getTurningEncoderRadians(), state.angle.getRadians());
 
-    
+    SmartDashboard.putNumber("angleSwerve"+ Integer.toString(driveId), state.angle.getRadians()); //  
+    SmartDashboard.putNumber("cAngleSwerve"+ Integer.toString(driveId), getTurningEncoderRadians()); //  
 
     // Calculate the turning motor output from the turning PID controller.
     m_driveMotor.set(
         MathUtil.clamp(
-            (driveOutput + driveFeedForward) * m_driveMotorGain,
+            (driveOutput + driveFeedForward) * m_driveMotorGain, // gain = 1, no gain
              -1.0, // min -100%
              1.0 // max +100%
         ) 

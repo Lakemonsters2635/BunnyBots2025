@@ -83,6 +83,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
                                                               1.0);
   
     public final AHRS m_gyro = new AHRS(AHRS.NavXComType.kMXP_SPI, 200); //new AHRS(SPI.Port.kMXP, (byte) 200);  //Nav X
+    private double m_cacheAngle = 180; //TODO
 
     private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
       m_frontLeftLocation,
@@ -119,6 +120,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_frontLeft.stop();
     m_backRight.stop();
     m_frontRight.stop();
+  }
+
+  public void stashAngle(){
+    m_cacheAngle = m_gyro.getAngle();
+  }
+
+  public void restoreAngle(){
+    resetAngle((m_cacheAngle+m_gyro.getAngle())%360);
   }
 
   // We previously had this toRedHead() in here for converting heading for auto usage
@@ -248,7 +257,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
   // do we use resetAngle(degree) when starting the auto from some angle which is not aligned with 
   // the front of the robot pointing downfield?
-  public void resetAngle(int degree){
+  public void resetAngle(double degree){
     //Use this method if you want to reset the angle to something not 0
     m_gyro.reset();
     m_gyro.setAngleAdjustment(degree);
@@ -282,6 +291,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void periodic() {
     //Hat Power Overides for Trimming Position and Rotation
     // System.out.println("X: "+getPose().getX()+"\tY: "+getPose().getY()+"\tRot: "+getPose().getRotation().getDegrees());
+    followJoystics = true;
     if (followJoystics) {
       if(rightJoystick.getPOV()==Constants.HAT_POV_MOVE_FORWARD ){
         yPowerCommanded = Constants.HAT_POWER_MOVE;
@@ -341,6 +351,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("xPowerCommanded", xPowerCommanded);
         SmartDashboard.putNumber("yPowerCommanded", yPowerCommanded);
         
+        // this.drive(xPowerCommanded * DrivetrainSubsystem.kMaxSpeed, 
+        //         0,
+        //         0,
+        //         true);
         this.drive(xPowerCommanded * DrivetrainSubsystem.kMaxSpeed, 
                 yPowerCommanded * DrivetrainSubsystem.kMaxSpeed,
                 MathUtil.applyDeadband(rotCommanded * this.kMaxAngularSpeed, 0.2),
@@ -350,30 +364,31 @@ public class DrivetrainSubsystem extends SubsystemBase {
     
     SmartDashboard.putNumber("rotCommanded", rotCommanded);
 
-    double loggingStateForAdvantageScope[] = {     //Array for predicted values
-      swerveModuleStates[Constants.FRONT_LEFT_MODULE_STATE_INDEX].angle.getDegrees() - 90, // Order here is BR, FR, BL, FL; order on Advantage Scope is FL, FR, BL, BR, but it works like this and we don't know why
-      swerveModuleStates[Constants.FRONT_LEFT_MODULE_STATE_INDEX].speedMetersPerSecond,
-      swerveModuleStates[Constants.FRONT_RIGHT_MODULE_STATE_INDEX].angle.getDegrees() - 90,
-      swerveModuleStates[Constants.FRONT_RIGHT_MODULE_STATE_INDEX].speedMetersPerSecond,
-      swerveModuleStates[Constants.BACK_LEFT_MODULE_STATE_INDEX].angle.getDegrees() - 90,
-      swerveModuleStates[Constants.BACK_LEFT_MODULE_STATE_INDEX].speedMetersPerSecond,
-      swerveModuleStates[Constants.BACK_RIGHT_MODULE_STATE_INDEX].angle.getDegrees() - 90,
-      swerveModuleStates[Constants.BACK_RIGHT_MODULE_STATE_INDEX].speedMetersPerSecond,
-    };
+    // TODO: uncomment the following for swerve debugging
+    // double loggingStateForAdvantageScope[] = {     //Array for predicted values
+    //   swerveModuleStates[Constants.FRONT_LEFT_MODULE_STATE_INDEX].angle.getDegrees() - 90, // Order here is BR, FR, BL, FL; order on Advantage Scope is FL, FR, BL, BR, but it works like this and we don't know why
+    //   swerveModuleStates[Constants.FRONT_LEFT_MODULE_STATE_INDEX].speedMetersPerSecond,
+    //   swerveModuleStates[Constants.FRONT_RIGHT_MODULE_STATE_INDEX].angle.getDegrees() - 90,
+    //   swerveModuleStates[Constants.FRONT_RIGHT_MODULE_STATE_INDEX].speedMetersPerSecond,
+    //   swerveModuleStates[Constants.BACK_LEFT_MODULE_STATE_INDEX].angle.getDegrees() - 90,
+    //   swerveModuleStates[Constants.BACK_LEFT_MODULE_STATE_INDEX].speedMetersPerSecond,
+    //   swerveModuleStates[Constants.BACK_RIGHT_MODULE_STATE_INDEX].angle.getDegrees() - 90,
+    //   swerveModuleStates[Constants.BACK_RIGHT_MODULE_STATE_INDEX].speedMetersPerSecond,
+    // };
 
-    double loggingActualStateForAdvantageScope[] = {
-      (m_frontLeft.getTurningEncoderRadians() * 180 / Math.PI) - 90, // same order problem as predicted values
-      m_frontLeft.getVelocity(),
-      (m_frontRight.getTurningEncoderRadians() * 180 / Math.PI) - 90,
-      m_frontRight.getVelocity(),
-      (m_backLeft.getTurningEncoderRadians() * 180 / Math.PI) - 90,
-      m_backLeft.getVelocity(),
-      (m_backRight.getTurningEncoderRadians() * 180 / Math.PI) - 90,
-      m_backRight.getVelocity(),
-    };
+    // double loggingActualStateForAdvantageScope[] = {
+    //   (m_frontLeft.getTurningEncoderRadians() * 180 / Math.PI) - 90, // same order problem as predicted values
+    //   m_frontLeft.getVelocity(),
+    //   (m_frontRight.getTurningEncoderRadians() * 180 / Math.PI) - 90,
+    //   m_frontRight.getVelocity(),
+    //   (m_backLeft.getTurningEncoderRadians() * 180 / Math.PI) - 90,
+    //   m_backLeft.getVelocity(),
+    //   (m_backRight.getTurningEncoderRadians() * 180 / Math.PI) - 90,
+    //   m_backRight.getVelocity(),
+    // };
 
-    SmartDashboard.putNumberArray("loggingStateForAdvantageScope",loggingStateForAdvantageScope);
-    SmartDashboard.putNumberArray("loggingActualStateForAdvantageScope", loggingActualStateForAdvantageScope);
+    // SmartDashboard.putNumberArray("loggingStateForAdvantageScope",loggingStateForAdvantageScope);
+    // SmartDashboard.putNumberArray("loggingActualStateForAdvantageScope", loggingActualStateForAdvantageScope);
 
 
     updateOdometry();
