@@ -291,6 +291,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void periodic() {
     //Hat Power Overides for Trimming Position and Rotation
     // System.out.println("X: "+getPose().getX()+"\tY: "+getPose().getY()+"\tRot: "+getPose().getRotation().getDegrees());
+    followJoystics = true;
     if (followJoystics) {
       if(rightJoystick.getPOV()==Constants.HAT_POV_MOVE_FORWARD ){
         yPowerCommanded = Constants.HAT_POWER_MOVE;
@@ -350,7 +351,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("xPowerCommanded", xPowerCommanded);
         SmartDashboard.putNumber("yPowerCommanded", yPowerCommanded);
         
-        // TODO: Uncomment this after auto test:
+        // this.drive(xPowerCommanded * DrivetrainSubsystem.kMaxSpeed, 
+        //         0,
+        //         0,
+        //         true);
         this.drive(xPowerCommanded * DrivetrainSubsystem.kMaxSpeed, 
                 yPowerCommanded * DrivetrainSubsystem.kMaxSpeed,
                 MathUtil.applyDeadband(rotCommanded * this.kMaxAngularSpeed, 0.2),
