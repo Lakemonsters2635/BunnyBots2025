@@ -60,6 +60,12 @@ public class Constants {
     public static final int HAT_POV_180 = 180; // Left hat down
     public static final int HAT_POV_ROTATE_LEFT = 270;
     public static final int HAT_POV_ROTATE_RIGHT = 90;
+
+    //ELEVATOR CONSTANTS
+    public static final int ELEVATOR_MOTOR_ID = 11; //TODO: Change this value later when robot is accessible
+    public static final int ELEVATOR_ENCODER_CLICK = 0;// number of clicks in a full rotation of the elavtator motor
+    public static final double ELEVATOR_VOLTAGE = 1; 
+    public static final double ELEVATOR_UP_VOLTAGE = 0.5;
     
     // JOYSTICKS
     public static final int LEFT_JOYSTICK_PORT = 0; // TODO: set correct ports

@@ -8,12 +8,16 @@ package frc.robot;
 import frc.robot.commands.Autos;
 import frc.robot.commands.VisionAutoCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ElevatorDownCommand;
+import frc.robot.commands.ElevatorUpCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ObjectTrackerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -38,6 +42,12 @@ public class RobotContainer {
   public static Autos m_autos = new Autos(m_drivetrainSubsystem);
   public static IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   public static IntakeCommand m_intakeCommand = new IntakeCommand(m_intakeSubsystem);
+  public static ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+
+  public static ElevatorUpCommand m_ElevatorUpCommand = new ElevatorUpCommand(m_ElevatorSubsystem);
+  public static ElevatorDownCommand m_ElevatorDownCommand = new ElevatorDownCommand(m_ElevatorSubsystem);
+ 
+  
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   
@@ -64,6 +74,11 @@ public class RobotContainer {
     // cancelling on release.
    Trigger indexButton = new JoystickButton(leftJoystick, Constants.INTAKE_BUTTON);
    indexButton.whileTrue(m_intakeCommand);
+    Trigger elevatorUpButton = new JoystickButton(leftJoystick, 5);
+    elevatorUpButton.onTrue(m_ElevatorUpCommand);
+
+    Trigger elevatorDownButton = new JoystickButton(leftJoystick, 3);
+    elevatorDownButton.onTrue(m_ElevatorDownCommand);
     
   }
 
