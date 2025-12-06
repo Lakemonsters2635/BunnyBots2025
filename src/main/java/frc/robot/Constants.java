@@ -66,9 +66,9 @@ public class Constants {
     public static final int RIGHT_JOYSTICK_PORT = 1;
 
     //INTAKE CONSTANTS
-    public static final int INTAKE_MOTOR_ID1 = 3;//TODO: change ID when given robot
-    public static final int INTAKE_MOTOR_ID2 = 4;//TODO: change ID when given robot
-    public static final double INTAKE_MOTOR_VOLTAGE = 0.1;//TODO: change voltage for when we actully have a robot
+    public static final int INTAKE_MOTOR_TOP_ID = 9;//TODO: change ID when given robot
+    public static final int INTAKE_MOTOR_BOTTOM_ID = 10;//TODO: change ID when given robot
+    public static final double INTAKE_MOTOR_VOLTAGE = -1.5;//TODO: change voltage for when we actully have a robot
 
     //BUTTONS
     public static final int INTAKE_BUTTON = 4;// TODO: change ID when given robot

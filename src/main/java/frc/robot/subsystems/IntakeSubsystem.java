@@ -5,19 +5,33 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
-  private final TalonFX m_intakeMotor1;
-  private final TalonFX m_intakeMotor2;
+  private final SparkMax m_intakeMotor1;
+  private final SparkMax m_intakeMotor2;
+
+  private final SparkMaxConfig m_intakeMotor1Config;
+  private final SparkMaxConfig m_intakeMotor2Config;
 
 
   public IntakeSubsystem() {
-    m_intakeMotor1 = new TalonFX(Constants.INTAKE_MOTOR_ID1);
-    m_intakeMotor2 = new TalonFX(Constants.INTAKE_MOTOR_ID2);
+    m_intakeMotor1 = new SparkMax(Constants.INTAKE_MOTOR_TOP_ID, MotorType.kBrushless);
+    m_intakeMotor2 = new SparkMax(Constants.INTAKE_MOTOR_BOTTOM_ID, MotorType.kBrushless);
+
+    m_intakeMotor1Config = new SparkMaxConfig();
+    m_intakeMotor2Config = new SparkMaxConfig();
+
+    m_intakeMotor1.configure(m_intakeMotor1Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    m_intakeMotor2.configure(m_intakeMotor2Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   
     
   }
