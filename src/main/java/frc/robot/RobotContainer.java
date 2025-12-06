@@ -6,10 +6,14 @@ package frc.robot;
 
 
 import frc.robot.commands.Autos;
+import frc.robot.commands.ElevatorDownCommand;
+import frc.robot.commands.ElevatorUpCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -25,6 +29,12 @@ public class RobotContainer {
   public static Joystick leftJoystick = new Joystick(Constants.LEFT_JOYSTICK_PORT);
 
   public static DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  public static ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+
+  public static ElevatorUpCommand m_ElevatorUpCommand = new ElevatorUpCommand(m_ElevatorSubsystem);
+  public static ElevatorDownCommand m_ElevatorDownCommand = new ElevatorDownCommand(m_ElevatorSubsystem);
+ 
+  
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   
@@ -49,6 +59,11 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
+    Trigger elevatorUpButton = new JoystickButton(leftJoystick, 5);
+    elevatorUpButton.onTrue(m_ElevatorUpCommand);
+
+    Trigger elevatorDownButton = new JoystickButton(leftJoystick, 3);
+    elevatorDownButton.onTrue(m_ElevatorDownCommand);
     
   }
 

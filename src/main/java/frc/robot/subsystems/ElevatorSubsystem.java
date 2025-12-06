@@ -12,6 +12,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -67,9 +68,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    targetPos = MathUtil.clamp(targetPos, 0, 90);
-    ff = gain*Math.sin(Math.toRadians(getDegrees()));
-    fb = m_elevatorController.calculate(getDegrees(), targetPos);
-    setVoltage(MathUtil.clamp(ff+fb, -2, 2));
+    // targetPos = MathUtil.clamp(targetPos, 0, 90);
+    // ff = gain*Math.sin(Math.toRadians(getDegrees()));
+    // fb = m_elevatorController.calculate(getDegrees(), targetPos);
+    // setVoltage(MathUtil.clamp(ff+fb, -2, 2));
+    SmartDashboard.putNumber("elevator encoder", getEncoderValue());
   }
 }
