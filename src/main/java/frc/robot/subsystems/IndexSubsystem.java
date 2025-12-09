@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -19,10 +20,14 @@ public class IndexSubsystem extends SubsystemBase {
 
   private final SparkMaxConfig m_indexMotorConfig;
 
+  private double targetPos = -90;
+
   public IndexSubsystem() {
     m_indexMotor = new SparkMax(Constants.INDEX_SUBSYSTEM_ID, MotorType.kBrushless);
     m_indexMotorConfig = new SparkMaxConfig();
     m_indexMotorConfig.idleMode(IdleMode.kBrake);
+
+    m_indexMotor.getEncoder().setPosition(0);
 
     m_indexMotor.configure(
       m_indexMotorConfig, 
@@ -40,10 +45,24 @@ public void stopIndex(){
 }
 
 public double getPosition(){
-  return m_indexMotor.getEncoder().getPosition();
+  //-49.8 = 360 degrees
+  return m_indexMotor.getEncoder().getPosition()/49.8 * 360; 
+}
+
+public void setEncoderPos(double encoderPos){
+  m_indexMotor.getEncoder().setPosition(encoderPos);
+}
+
+public void addToTargetPos(double add){
+  targetPos += add;
+}
+
+public double getTargetPos(){
+  return targetPos;
 }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Index pos", getPosition());
   }
 }

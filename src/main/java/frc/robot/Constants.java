@@ -66,8 +66,8 @@ public class Constants {
     public static final int RIGHT_JOYSTICK_PORT = 1;
 
     //INDEX SUBSYSTEM CONSTANTS
-    public static final int INDEX_SUBSYSTEM_ID = 2; //TODO: change ID values when get robot
-    public static final double INDEX_SUBSYSTEM_VOLTAGE = 0.1; //TODO: change value when get robot
-    public static final double INDEX_EXPECTED_POSITION = 0.02; //TODO: change value tested properly
-}
+    public static final int INDEX_SUBSYSTEM_ID = 12; 
+    public static final double INDEX_SUBSYSTEM_VOLTAGE = -3; //negative is the correct direction
+    public static final double INDEX_EXPECTED_POSITION = -90; //In degrees
+}   
     
