@@ -66,10 +66,21 @@ public class Constants {
     public static final int ELEVATOR_ENCODER_CLICK = 0;// number of clicks in a full rotation of the elevator motor
     public static final double ELEVATOR_VOLTAGE = 1; 
     public static final double ELEVATOR_UP_VOLTAGE = 0.5;
-    
+
+    //Outtake
+    public static final int OUTTAKE_VOLTAGE = 1;
+    public static final int INTAKE_VOLTAGE = 1;
+    public static final double SHOOTER_TARGET_DELTA_ANGLE = 1.45;
+    public static final double SHOOTER_P = 15;
+    public static final double SHOOTER_I = 0;
+    public static final double SHOOTER_D = .1;
+
     // JOYSTICKS
     public static final int LEFT_JOYSTICK_PORT = 0;
     public static final int RIGHT_JOYSTICK_PORT = 1;
+
+    // BUTTONS
+    public static final int SHOOTER_BUTTON = 1; // TODO: set correct buttons
 
     // VISION AUTO COMMAND
     // TODO: VisionAutoData assumes only a single camera

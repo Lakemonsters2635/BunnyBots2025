@@ -11,14 +11,20 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ElevatorDownCommand;
 import frc.robot.commands.ElevatorUpCommand;
 import frc.robot.commands.IndexIntakeCommand;
+import frc.robot.commands.OuttakeBack;
+import frc.robot.commands.OuttakeCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ObjectTrackerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
+import frc.robot.subsystems.OuttakeSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -37,6 +43,11 @@ public class RobotContainer {
 
   // SUBSYSTEMS
   public static DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+
+  public static OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
+
+  public static OuttakeCommand m_outtakeCommand = new OuttakeCommand(m_outtakeSubsystem);
+  public static OuttakeBack m_outtakeBack = new OuttakeBack(m_outtakeSubsystem);
   public static IndexSubsystem m_indexSubsystem = new IndexSubsystem();
 
   public static IndexIntakeCommand m_indexIntakeCommand = new IndexIntakeCommand(m_indexSubsystem);
@@ -68,6 +79,13 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
+    Trigger outtakeTrigger = new JoystickButton(leftJoystick, Constants.SHOOTER_BUTTON);
+
+    // outtakeTrigger.onTrue(new SequentialCommandGroup(m_outtakeCommand, m_outtakeBack));
+    // outtakeTrigger.onTrue(new InstantCommand(()->m_outtakeSubsystem.setAngle(Constants.SHOOTER_TARGET_DELTA_ANGLE)));
+    outtakeTrigger.onTrue(new SequentialCommandGroup(m_outtakeCommand, m_outtakeBack));
+
     // LEFT JOYSTICK BUTTONS
     Trigger intakeButton = new JoystickButton(leftJoystick, Constants.INTAKE_BUTTON);
     Trigger elevatorUpButton = new JoystickButton(leftJoystick, Constants.ELEVATOR_UP_BUTTON);
