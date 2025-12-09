@@ -10,13 +10,16 @@ import frc.robot.commands.VisionAutoCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ElevatorDownCommand;
 import frc.robot.commands.ElevatorUpCommand;
+import frc.robot.commands.IndexIntakeCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ObjectTrackerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IndexSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -34,6 +37,9 @@ public class RobotContainer {
 
   // SUBSYSTEMS
   public static DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  public static IndexSubsystem m_indexSubsystem = new IndexSubsystem();
+
+  public static IndexIntakeCommand m_indexIntakeCommand = new IndexIntakeCommand(m_indexSubsystem);
   public static ObjectTrackerSubsystem m_objectTrackerSubsystem = new ObjectTrackerSubsystem("Eclipse");
   public static ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
   public static IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
@@ -63,7 +69,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // LEFT JOYSTICK BUTTONS
-    Trigger indexButton = new JoystickButton(leftJoystick, Constants.INTAKE_BUTTON);
+    Trigger intakeButton = new JoystickButton(leftJoystick, Constants.INTAKE_BUTTON);
     Trigger elevatorUpButton = new JoystickButton(leftJoystick, Constants.ELEVATOR_UP_BUTTON);
     Trigger elevatorDownButton = new JoystickButton(leftJoystick, Constants.ELEVATOR_DOWN_BUTTON);
 
@@ -71,12 +77,13 @@ public class RobotContainer {
 
 
     // LEFT JOYSTICK BUTTON COMMANDS
-    indexButton.whileTrue(m_intakeCommand);
+    intakeButton.whileTrue(m_intakeCommand);
     elevatorUpButton.onTrue(m_ElevatorUpCommand);
     elevatorDownButton.onTrue(m_ElevatorDownCommand);
 
     // RIGHT JOYSTICK BUTTON COMMANDS
-    
+    Trigger indexButton = new JoystickButton(leftJoystick, 6);
+    indexButton.onTrue(m_indexIntakeCommand);
   }
 
   /**

@@ -86,6 +86,11 @@ public class Constants {
     public static final int INTAKE_MOTOR_BOTTOM_ID = 10;
     public static final double INTAKE_MOTOR_VOLTAGE = -2.5;
 
+    //INDEX SUBSYSTEM CONSTANTS
+    public static final int INDEX_SUBSYSTEM_ID = 12; 
+    public static final double INDEX_SUBSYSTEM_VOLTAGE = -3; //negative is the correct direction
+    public static final double INDEX_EXPECTED_POSITION = -90; //In degrees
+
     //BUTTONS
     public static final int INTAKE_BUTTON = 4;// TODO: change ID when given robot
     public static final int ELEVATOR_UP_BUTTON = 5;
