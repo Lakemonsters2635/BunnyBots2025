@@ -14,6 +14,7 @@ public class OuttakeBack extends Command {
   public OuttakeBack(OuttakeSubsystem outtakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_outtakeSubsystem = outtakeSubsystem;
+    addRequirements(m_outtakeSubsystem);
   }
 
   // Called when the command is initially scheduled.

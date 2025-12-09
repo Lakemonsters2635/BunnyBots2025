@@ -62,10 +62,10 @@ public class Constants {
     public static final int HAT_POV_ROTATE_RIGHT = 90;
 
     //Outtake
-    public static final int OUTTAKE_VOLTAGE = 1; //TODO: CHANGE VALUE WHEN TESTED
+    public static final int OUTTAKE_VOLTAGE = 1;
     public static final int INTAKE_VOLTAGE = 1;
-    public static final double SHOOTER_TARGET_DELTA_ANGLE = 1.2;
-    public static final double SHOOTER_P = 12;
+    public static final double SHOOTER_TARGET_DELTA_ANGLE = 1.45;
+    public static final double SHOOTER_P = 15;
     public static final double SHOOTER_I = 0;
     public static final double SHOOTER_D = .1;
 

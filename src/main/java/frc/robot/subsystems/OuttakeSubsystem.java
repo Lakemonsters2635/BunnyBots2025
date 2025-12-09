@@ -27,7 +27,7 @@ public class OuttakeSubsystem extends SubsystemBase {
   Joystick m_joystick = new Joystick(0);
 
   public OuttakeSubsystem() {
-    outTakeMotor = new TalonFX(12);
+    outTakeMotor = new TalonFX(13);
     initialEncoderValue = outTakeMotor.getPosition().getValueAsDouble();
     slot0Configs.kG = 0;
     setPID(Constants.SHOOTER_P, Constants.SHOOTER_I, Constants.SHOOTER_D);
@@ -60,7 +60,7 @@ public class OuttakeSubsystem extends SubsystemBase {
   }
 
   public void stopmotorOutTake() {
-    outTakeMotor.setVoltage(0.25);
+    outTakeMotor.setVoltage(0.20); // To avoid arm crushing into
 
   }
   public double getPos(){

@@ -443,7 +443,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   /** Get pose from odometry field **/
   public Pose2d getPose() {
-    System.out.println(m_odometry.getPoseMeters());
+    // System.out.println(m_odometry.getPoseMeters());
     return m_odometry.getPoseMeters();
   }
 
@@ -546,7 +546,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    */
   public void tuneAngleOffsetPutToDTS() {
     // TUNE ANGLE OFFSETS
-    System.out.println(getPose());
+    // System.out.println(getPose());
     SmartDashboard.putNumber("getFLPose()", m_frontLeft.getDrivePosition());
     SmartDashboard.putNumber("getFRPose()", m_frontRight.getDrivePosition());
     SmartDashboard.putNumber("getBLPose()", m_backLeft.getDrivePosition());

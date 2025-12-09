@@ -22,6 +22,7 @@ public class OuttakeCommand extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     m_outtakeSubsystem = outtakeSubsystem;
     timer = new Timer();
+    addRequirements(m_outtakeSubsystem);
   }
 
   // Called when the command is initially scheduled.
