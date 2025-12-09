@@ -62,13 +62,13 @@ public class Constants {
     public static final int HAT_POV_ROTATE_RIGHT = 90;
 
     //ELEVATOR CONSTANTS
-    public static final int ELEVATOR_MOTOR_ID = 11; //TODO: Change this value later when robot is accessible
-    public static final int ELEVATOR_ENCODER_CLICK = 0;// number of clicks in a full rotation of the elavtator motor
+    public static final int ELEVATOR_MOTOR_ID = 11;
+    public static final int ELEVATOR_ENCODER_CLICK = 0;// number of clicks in a full rotation of the elevator motor
     public static final double ELEVATOR_VOLTAGE = 1; 
     public static final double ELEVATOR_UP_VOLTAGE = 0.5;
     
     // JOYSTICKS
-    public static final int LEFT_JOYSTICK_PORT = 0; // TODO: set correct ports
+    public static final int LEFT_JOYSTICK_PORT = 0;
     public static final int RIGHT_JOYSTICK_PORT = 1;
 
     // VISION AUTO COMMAND
@@ -82,12 +82,14 @@ public class Constants {
     public static final double[] CAMERA_OFFSET = {0.0, 0.0}; // offset = [x, y], In inches
 
     //INTAKE CONSTANTS
-    public static final int INTAKE_MOTOR_TOP_ID = 9;//TODO: change ID when given robot
-    public static final int INTAKE_MOTOR_BOTTOM_ID = 10;//TODO: change ID when given robot
-    public static final double INTAKE_MOTOR_VOLTAGE = -2.5;//TODO: change voltage for when we actully have a robot
+    public static final int INTAKE_MOTOR_TOP_ID = 9;
+    public static final int INTAKE_MOTOR_BOTTOM_ID = 10;
+    public static final double INTAKE_MOTOR_VOLTAGE = -2.5;
 
     //BUTTONS
     public static final int INTAKE_BUTTON = 4;// TODO: change ID when given robot
+    public static final int ELEVATOR_UP_BUTTON = 5;
+    public static final int ELEVATOR_DOWN_BUTTON = 3;
     
 }
 

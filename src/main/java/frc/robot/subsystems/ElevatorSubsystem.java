@@ -10,7 +10,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,7 +20,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   private static SparkMax m_elevatorMotor;
   private static SparkMaxConfig m_elevatorConfig;
   
-  double fb=0, ff=0, gain=0, offset = 0;//TODO: figure out gain value
+  // We are not using PID, so none of these values are currently used
+  // but we are not deleting them in case we want to use them later
+  double fb=0, ff=0, gain=0, offset = 0;
   double targetPos = 0;
 
   public ElevatorSubsystem() {

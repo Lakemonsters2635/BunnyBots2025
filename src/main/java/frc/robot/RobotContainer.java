@@ -28,29 +28,23 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  
+  // CONTROLLERS (eg. joystick, streamdeck, etc...)
   public static Joystick rightJoystick = new Joystick(Constants.RIGHT_JOYSTICK_PORT);
   public static Joystick leftJoystick = new Joystick(Constants.LEFT_JOYSTICK_PORT);
 
+  // SUBSYSTEMS
   public static DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-
   public static ObjectTrackerSubsystem m_objectTrackerSubsystem = new ObjectTrackerSubsystem("Eclipse");
-
-  public static VisionAutoCommand m_visionAutoCommand = new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 8, 5, -24, 0.0001,90);
-
-  public static Autos m_autos = new Autos(m_drivetrainSubsystem);
-  public static IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-  public static IntakeCommand m_intakeCommand = new IntakeCommand(m_intakeSubsystem);
   public static ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+  public static IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
 
+  // COMMANDS
+  public static VisionAutoCommand m_visionAutoCommand = new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 8, 5, -24, 0.0001,90);
+  public static IntakeCommand m_intakeCommand = new IntakeCommand(m_intakeSubsystem);
   public static ElevatorUpCommand m_ElevatorUpCommand = new ElevatorUpCommand(m_ElevatorSubsystem);
   public static ElevatorDownCommand m_ElevatorDownCommand = new ElevatorDownCommand(m_ElevatorSubsystem);
- 
-  
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  
+  public static Autos m_autos = new Autos(m_drivetrainSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -68,17 +62,20 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    // LEFT JOYSTICK BUTTONS
+    Trigger indexButton = new JoystickButton(leftJoystick, Constants.INTAKE_BUTTON);
+    Trigger elevatorUpButton = new JoystickButton(leftJoystick, Constants.ELEVATOR_UP_BUTTON);
+    Trigger elevatorDownButton = new JoystickButton(leftJoystick, Constants.ELEVATOR_DOWN_BUTTON);
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-   Trigger indexButton = new JoystickButton(leftJoystick, Constants.INTAKE_BUTTON);
-   indexButton.whileTrue(m_intakeCommand);
-    Trigger elevatorUpButton = new JoystickButton(leftJoystick, 5);
+    // RIGHT JOYSTICK BUTTONS
+
+
+    // LEFT JOYSTICK BUTTON COMMANDS
+    indexButton.whileTrue(m_intakeCommand);
     elevatorUpButton.onTrue(m_ElevatorUpCommand);
-
-    Trigger elevatorDownButton = new JoystickButton(leftJoystick, 3);
     elevatorDownButton.onTrue(m_ElevatorDownCommand);
+
+    // RIGHT JOYSTICK BUTTON COMMANDS
     
   }
 

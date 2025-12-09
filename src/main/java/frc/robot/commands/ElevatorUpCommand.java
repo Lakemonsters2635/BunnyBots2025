@@ -10,20 +10,16 @@ import frc.robot.subsystems.ElevatorSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ElevatorUpCommand extends Command {
-  /** Creates a new ElevatorUpCommand. */
-  private static ElevatorSubsystem m_es;
+  private static ElevatorSubsystem m_elevatorSubsystem;
 
-  public ElevatorUpCommand(ElevatorSubsystem es) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_es = es;
-
-
+  public ElevatorUpCommand(ElevatorSubsystem elevatorSubsystem) {
+    m_elevatorSubsystem = elevatorSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_es.setVoltage(Constants.ELEVATOR_VOLTAGE );
+    m_elevatorSubsystem.setVoltage(Constants.ELEVATOR_VOLTAGE );
 
   }
 
@@ -34,13 +30,13 @@ public class ElevatorUpCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_es.setVoltage(Constants.ELEVATOR_UP_VOLTAGE);
+    m_elevatorSubsystem.setVoltage(Constants.ELEVATOR_UP_VOLTAGE);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_es.getEncoderValue() > 15){
+    if(m_elevatorSubsystem.getEncoderValue() > 15){
       return true;
     }
     return false;
