@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -56,7 +57,7 @@ public class RobotContainer {
   public static IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
 
   // COMMANDS
-  public static VisionAutoCommand m_visionAutoCommand = new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 8, 5, -24, 0.0001,90);
+  // public static VisionAutoCommand m_visionAutoCommand = new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 8, 5, -24, 0.0001,90);
   public static IntakeCommand m_intakeCommand = new IntakeCommand(m_intakeSubsystem);
   public static ElevatorUpCommand m_ElevatorUpCommand = new ElevatorUpCommand(m_ElevatorSubsystem);
   public static ElevatorDownCommand m_ElevatorDownCommand = new ElevatorDownCommand(m_ElevatorSubsystem);
@@ -100,9 +101,10 @@ public class RobotContainer {
     elevatorDownButton.onTrue(m_ElevatorDownCommand);
 
     // RIGHT JOYSTICK BUTTON COMMANDS
-    Trigger indexButton = new JoystickButton(leftJoystick, 6);
+    Trigger indexButton = new JoystickButton(leftJoystick, 
+    6);
     indexButton.onTrue(m_indexIntakeCommand);
-    alignButton.onTrue(new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 10, 3, -58.5, 0, -90));
+    alignButton.onTrue(new VisionAutoCommand(m_drivetrainSubsystem,m_objectTrackerSubsystem , 10, 3, -58.5, 0, -90));
   }
 
   /**
@@ -113,7 +115,18 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     //return new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 4, 5, -24, 0.0001, 270);
-    return null;
+    return new SequentialCommandGroup(
+      new WaitCommand(5),
+      new VisionAutoCommand(m_drivetrainSubsystem,m_objectTrackerSubsystem , 10, 3, -58.5, 0, -90),
+      new WaitCommand(2),
+      new OuttakeCommand(m_outtakeSubsystem),
+      new OuttakeBack(m_outtakeSubsystem),
+      new IndexIntakeCommand(m_indexSubsystem),
+      //new IndexIntakeCommand(m_indexSubsystem),
+      new WaitCommand(2),
+      new OuttakeCommand(m_outtakeSubsystem),
+      new OuttakeBack(m_outtakeSubsystem)          
+    );
   }
 }
 

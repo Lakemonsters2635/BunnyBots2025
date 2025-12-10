@@ -183,8 +183,8 @@ public class VisionAutoCommand extends Command{
     // double m_fb_y = MathUtil.clamp(pid_y, -y_clamp, y_clamp);
     // double m_fb_rot = MathUtil.clamp(pid_rot, -PURE_VISION_MAX_RAD_PER_SEC, PURE_VISION_MAX_RAD_PER_SEC);
 
-    double m_fb_x = MathUtil.clamp(pid_x/pid_c * .5, -.5, .5);
-    double m_fb_y = MathUtil.clamp(pid_y/pid_c * .5, -.5, .5);
+    double m_fb_x = MathUtil.clamp(pid_x/pid_c * 2.5, -2.5, 2.5);
+    double m_fb_y = MathUtil.clamp(pid_y/pid_c * 2.5, -2.5, 2.5);
     double m_fb_rot = MathUtil.clamp(pid_rot/4, -Math.PI/4, Math.PI/4);
 
     SmartDashboard.putNumber("pid_x", pid_x);
