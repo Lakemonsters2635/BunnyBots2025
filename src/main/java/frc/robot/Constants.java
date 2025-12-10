@@ -70,10 +70,10 @@ public class Constants {
     //Outtake
     public static final int OUTTAKE_VOLTAGE = 1;
     public static final int INTAKE_VOLTAGE = 1;
-    public static final double SHOOTER_TARGET_DELTA_ANGLE = 1.45;
-    public static final double SHOOTER_P = 15;
+    public static final double SHOOTER_TARGET_DELTA_ANGLE = 1.3;
+    public static final double SHOOTER_P = 18;
     public static final double SHOOTER_I = 0;
-    public static final double SHOOTER_D = .1;
+    public static final double SHOOTER_D = .2;
 
     // JOYSTICKS
     public static final int LEFT_JOYSTICK_PORT = 0;
