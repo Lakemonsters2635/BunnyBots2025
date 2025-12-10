@@ -46,7 +46,7 @@ public void stopIndex(){
 
 public double getPosition(){
   //-49.8 = 360 degrees
-  return m_indexMotor.getEncoder().getPosition()/49.8 * 360; 
+  return m_indexMotor.getEncoder().getPosition()/50 * 360; 
 }
 
 public void setEncoderPos(double encoderPos){
@@ -64,5 +64,6 @@ public double getTargetPos(){
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Index pos", getPosition());
+    
   }
 }

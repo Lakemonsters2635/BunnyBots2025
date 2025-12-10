@@ -42,8 +42,8 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void intake(){
-    m_intakeMotor1.setVoltage(Constants.INTAKE_MOTOR_VOLTAGE);
-    m_intakeMotor2.setVoltage(-Constants.INTAKE_MOTOR_VOLTAGE);
+    m_intakeMotor1.setVoltage(Constants.INTAKE_TOP_VOLTAGE);
+    m_intakeMotor2.setVoltage(-Constants.INTAKE_BOT_VOLTAGE);
   }
 
   public void stopIntake(){

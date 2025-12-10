@@ -95,7 +95,8 @@ public class Constants {
     //INTAKE CONSTANTS
     public static final int INTAKE_MOTOR_TOP_ID = 9;
     public static final int INTAKE_MOTOR_BOTTOM_ID = 10;
-    public static final double INTAKE_MOTOR_VOLTAGE = -2.5;
+    public static final double INTAKE_TOP_VOLTAGE = -2.5;
+    public static final double INTAKE_BOT_VOLTAGE = -6;
 
     //INDEX SUBSYSTEM CONSTANTS
     public static final int INDEX_SUBSYSTEM_ID = 12; 
