@@ -89,8 +89,8 @@ public class Constants {
     public static final int CAM_ANGLE_OFFSET = 0; // Rad // TODO: Code currently assumes the camera is facing forward
 
     // OBJECT TRACKER SUBSYSTEM
-    public static final double CAMERA_TILT = 21;
-    public static final double[] CAMERA_OFFSET = {0.0, 0.0}; // offset = [x, y], In inches
+    public static final double CAMERA_TILT = 35;
+    public static final double[] CAMERA_OFFSET = {3, 13}; // offset = [x, y], In inches
 
     //INTAKE CONSTANTS
     public static final int INTAKE_MOTOR_TOP_ID = 9;

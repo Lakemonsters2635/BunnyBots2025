@@ -92,7 +92,7 @@ public class RobotContainer {
     Trigger elevatorDownButton = new JoystickButton(leftJoystick, Constants.ELEVATOR_DOWN_BUTTON);
 
     // RIGHT JOYSTICK BUTTONS
-
+    Trigger alignButton = new JoystickButton(rightJoystick, 1);
 
     // LEFT JOYSTICK BUTTON COMMANDS
     intakeButton.whileTrue(m_intakeCommand);
@@ -102,6 +102,7 @@ public class RobotContainer {
     // RIGHT JOYSTICK BUTTON COMMANDS
     Trigger indexButton = new JoystickButton(leftJoystick, 6);
     indexButton.onTrue(m_indexIntakeCommand);
+    alignButton.onTrue(new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 10, 3, -58.5, 0, -90));
   }
 
   /**

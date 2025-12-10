@@ -291,7 +291,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void periodic() {
     //Hat Power Overides for Trimming Position and Rotation
     // System.out.println("X: "+getPose().getX()+"\tY: "+getPose().getY()+"\tRot: "+getPose().getRotation().getDegrees());
-    followJoystics = true;
+    
     if (followJoystics) {
       if(rightJoystick.getPOV()==Constants.HAT_POV_MOVE_FORWARD ){
         yPowerCommanded = Constants.HAT_POWER_MOVE;
@@ -366,7 +366,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       // }
     }
     
-    SmartDashboard.putNumber("rotCommanded", rotCommanded);
+    
 
     // TODO: uncomment the following for swerve debugging
     // double loggingStateForAdvantageScope[] = {     //Array for predicted values

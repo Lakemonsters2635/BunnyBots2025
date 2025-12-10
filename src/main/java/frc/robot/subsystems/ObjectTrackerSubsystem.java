@@ -604,10 +604,10 @@ public class ObjectTrackerSubsystem extends SubsystemBase {
 
     public Detection applyOffset(Detection detectionObject){
         Detection offsetedDetection = detectionObject;
-        offsetedDetection.z = Math.cos(cameraTilt) * offsetedDetection.z;
+        offsetedDetection.z = Math.cos(Math.toRadians(cameraTilt)) * offsetedDetection.z;
         offsetedDetection.z = offsetedDetection.z + cameraOffset[1]; // TODO: Figure out these signs
-        offsetedDetection.x = offsetedDetection.x + cameraOffset[0];
-
+        offsetedDetection.x = offsetedDetection.x - cameraOffset[0];
+        
         return offsetedDetection;
     }
 
