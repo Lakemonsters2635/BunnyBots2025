@@ -55,17 +55,19 @@ public class OuttakeCommand extends Command {
   @Override
   public boolean isFinished() {
     // TODO: change limit value(0) later when tested
-    // if(MathUtil.isNear(Constants.SHOOTER_TARGET_DELTA_ANGLE, m_outtakeSubsystem.getPosCalibrated(),  .2)
-    //     && (timer.get() > .2)){
-    //   SmartDashboard.putBoolean("isFin", true);
-    //   return true;
-    // }
-
-    if( isCloseTo(Constants.SHOOTER_TARGET_DELTA_ANGLE, m_outtakeSubsystem.getPosCalibrated(),  .2)
+    if(MathUtil.isNear(Constants.SHOOTER_TARGET_DELTA_ANGLE, m_outtakeSubsystem.getPosCalibrated(),  .2)
         && (timer.get() > .2)){
-      // SmartDashboard.putBoolean("isFin", true);
+      SmartDashboard.putBoolean("isFin", true);
       return true;
     }
+
+    // if( isCloseTo(Constants.SHOOTER_TARGET_DELTA_ANGLE, m_outtakeSubsystem.getPosCalibrated(),  .2)
+    //     && (timer.get() > .2)){
+    //   // SmartDashboard.putBoolean("isFin", true);
+    //   System.out.println("OUTTAKECOMMAND ENDED !!!!!!!!!!!!!!!");
+
+    //   return true;
+    // }
     return false;
     
   }

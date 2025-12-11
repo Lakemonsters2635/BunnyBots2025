@@ -70,7 +70,7 @@ public class Constants {
     //Outtake
     public static final int OUTTAKE_VOLTAGE = 1;
     public static final int INTAKE_VOLTAGE = 1;
-    public static final double SHOOTER_TARGET_DELTA_ANGLE = 1.3;
+    public static final double SHOOTER_TARGET_DELTA_ANGLE = 1.4;
     public static final double SHOOTER_P = 18;
     public static final double SHOOTER_I = 0;
     public static final double SHOOTER_D = .2;
@@ -89,7 +89,7 @@ public class Constants {
     public static final int CAM_ANGLE_OFFSET = 0; // Rad // TODO: Code currently assumes the camera is facing forward
 
     // OBJECT TRACKER SUBSYSTEM
-    public static final double CAMERA_TILT = 35;
+    public static final double CAMERA_TILT = 37; //previous was 35
     public static final double[] CAMERA_OFFSET = {3, 13}; // offset = [x, y], In inches
 
     //INTAKE CONSTANTS

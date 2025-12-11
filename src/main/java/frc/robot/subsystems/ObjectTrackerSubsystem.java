@@ -75,7 +75,6 @@ public class ObjectTrackerSubsystem extends SubsystemBase {
     private double cameraTilt = Constants.CAMERA_TILT;
     private double[] cameraOffset = Constants.CAMERA_OFFSET; // goes {x, y} // In inches // TODO: figure this offset
 
-    private double sinTheta;
     private double cosTheta;
 
     public DetectionList yoloObjects;
@@ -97,9 +96,8 @@ public class ObjectTrackerSubsystem extends SubsystemBase {
         //     cameraOffset=Constants.VISION_TOTE_CAM_OFFSET;
         //     m_cameraPitch = CAMERA_PITCH_FRONT;
         // }
-
-        sinTheta = Math.sin(cameraTilt);
-        cosTheta = Math.cos(cameraTilt);
+        cosTheta = Math.cos(Math.toRadians(cameraTilt));
+       
 
         yoloObjects = new DetectionList();
         aprilTags = new DetectionList();       
@@ -604,7 +602,7 @@ public class ObjectTrackerSubsystem extends SubsystemBase {
 
     public Detection applyOffset(Detection detectionObject){
         Detection offsetedDetection = detectionObject;
-        offsetedDetection.z = Math.cos(Math.toRadians(cameraTilt)) * offsetedDetection.z;
+        offsetedDetection.z = cosTheta * offsetedDetection.z;
         offsetedDetection.z = offsetedDetection.z + cameraOffset[1]; // TODO: Figure out these signs
         offsetedDetection.x = offsetedDetection.x - cameraOffset[0];
         

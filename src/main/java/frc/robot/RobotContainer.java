@@ -13,6 +13,7 @@ import frc.robot.commands.ElevatorUpCommand;
 import frc.robot.commands.IndexIntakeCommand;
 import frc.robot.commands.OuttakeBack;
 import frc.robot.commands.OuttakeCommand;
+import frc.robot.commands.OuttakeRemoveBacklash;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ObjectTrackerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -53,16 +54,17 @@ public class RobotContainer {
 
   public static IndexIntakeCommand m_indexIntakeCommand = new IndexIntakeCommand(m_indexSubsystem);
   public static ObjectTrackerSubsystem m_objectTrackerSubsystem = new ObjectTrackerSubsystem("Eclipse");
-  public static ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+  public static ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
   public static IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
 
   // COMMANDS
   // public static VisionAutoCommand m_visionAutoCommand = new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 8, 5, -24, 0.0001,90);
   public static IntakeCommand m_intakeCommand = new IntakeCommand(m_intakeSubsystem);
-  public static ElevatorUpCommand m_ElevatorUpCommand = new ElevatorUpCommand(m_ElevatorSubsystem);
-  public static ElevatorDownCommand m_ElevatorDownCommand = new ElevatorDownCommand(m_ElevatorSubsystem);
+  public static ElevatorUpCommand m_ElevatorUpCommand = new ElevatorUpCommand(m_elevatorSubsystem);
+  public static ElevatorDownCommand m_ElevatorDownCommand = new ElevatorDownCommand(m_elevatorSubsystem);
+  public static OuttakeRemoveBacklash m_outtakeRemoveBacklash = new OuttakeRemoveBacklash(m_outtakeSubsystem);
 
-  public static Autos m_autos = new Autos(m_drivetrainSubsystem);
+  public static Autos m_autos = new Autos(m_drivetrainSubsystem, m_outtakeSubsystem, m_indexSubsystem, m_elevatorSubsystem,m_objectTrackerSubsystem, m_intakeSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -85,7 +87,9 @@ public class RobotContainer {
 
     // outtakeTrigger.onTrue(new SequentialCommandGroup(m_outtakeCommand, m_outtakeBack));
     // outtakeTrigger.onTrue(new InstantCommand(()->m_outtakeSubsystem.setAngle(Constants.SHOOTER_TARGET_DELTA_ANGLE)));
-    outtakeTrigger.onTrue(new SequentialCommandGroup(m_outtakeCommand, m_outtakeBack));
+    outtakeTrigger.onTrue(new SequentialCommandGroup(m_outtakeRemoveBacklash,
+                                                    new WaitCommand(.1), 
+                                                    m_outtakeCommand, new WaitCommand(0.1), m_outtakeBack));
 
     // LEFT JOYSTICK BUTTONS
     Trigger intakeButton = new JoystickButton(leftJoystick, Constants.INTAKE_BUTTON);
@@ -115,12 +119,14 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     //return new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 4, 5, -24, 0.0001, 270);
+    // return m_autos.straightScoreAuto();
     return new SequentialCommandGroup(
-      new WaitCommand(5),
-      new VisionAutoCommand(m_drivetrainSubsystem,m_objectTrackerSubsystem , 10, 3, -58.5, 0, -90),
+      new WaitCommand(2),
+      new VisionAutoCommand(m_drivetrainSubsystem,m_objectTrackerSubsystem , 10, 6, -58.5, 0, -90),
       new WaitCommand(2),
       new OuttakeCommand(m_outtakeSubsystem),
       new OuttakeBack(m_outtakeSubsystem),
+      new WaitCommand(2),
       new IndexIntakeCommand(m_indexSubsystem),
       //new IndexIntakeCommand(m_indexSubsystem),
       new WaitCommand(2),
