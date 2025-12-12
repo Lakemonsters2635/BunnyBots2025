@@ -306,14 +306,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
         xPowerCommanded = Constants.HAT_POWER_MOVE*-1.0;
       }
       else {
-        if (rightJoystick.getY()>0.05 || rightJoystick.getY()<-0.05) {
+        if (rightJoystick.getY()>0.1 || rightJoystick.getY()<-0.1) {
           yPowerCommanded = rightJoystick.getY() * -1;
         }
         else{
           yPowerCommanded = 0;
         }
 
-        if (rightJoystick.getX()>0.05 || rightJoystick.getX()<-0.05) {
+        if (rightJoystick.getX()>0.1 || rightJoystick.getX()<-0.1) {
           xPowerCommanded = rightJoystick.getX();
         }
         else{
@@ -328,7 +328,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         rotCommanded = Constants.HAT_POWER_ROTATE;
       }
       else{
-        if (Math.pow(rightJoystick.getTwist(),3)>0.05 || Math.pow(rightJoystick.getTwist(),3)<-0.05) {
+        if (Math.pow(rightJoystick.getTwist(),3)>0.1 || Math.pow(rightJoystick.getTwist(),3)<-0.1) {
           rotCommanded = rightJoystick.getTwist()*-1;
         }
         else{

@@ -184,6 +184,9 @@ public class PidAutoCommand extends Command {
     SmartDashboard.putNumber("yPidStart", m_y_start);
     SmartDashboard.putNumber("rotPidStart", m_rot_start);
     SmartDashboard.putBoolean("isVisionAuto", isVisionAuto);
+    SmartDashboard.putNumber("pidXPose", m_dts.getPose().getX());
+    SmartDashboard.putNumber("pidYPose", m_dts.getPose().getY());
+
 
 
 

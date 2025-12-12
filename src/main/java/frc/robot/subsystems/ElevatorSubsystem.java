@@ -32,7 +32,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     
     m_elevatorConfig = new SparkMaxConfig();
 
-    m_elevatorConfig.idleMode(IdleMode.kBrake);
+    m_elevatorConfig.idleMode(IdleMode.kCoast);
     m_elevatorConfig.inverted(false);
 
     m_elevatorMotor.configure(

@@ -19,7 +19,7 @@ public class ElevatorUpCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_elevatorSubsystem.setVoltage(Constants.ELEVATOR_VOLTAGE );
+    m_elevatorSubsystem.setVoltage(Constants.ELEVATOR_VOLTAGE);
 
   }
 
@@ -30,7 +30,7 @@ public class ElevatorUpCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_elevatorSubsystem.setVoltage(Constants.ELEVATOR_UP_VOLTAGE);
+    m_elevatorSubsystem.setVoltage(Constants.ELEVATOR_HOLD_VOLTAGE);
   }
 
   // Returns true when the command should end.

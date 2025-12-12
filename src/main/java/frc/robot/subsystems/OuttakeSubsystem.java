@@ -56,6 +56,10 @@ public class OuttakeSubsystem extends SubsystemBase {
     outTakeMotor.setVoltage(5);
   }
 
+  public void setMotorPower(double motorPower){
+    outTakeMotor.setVoltage(motorPower);
+  }
+
   public void motorMoveBack(){
     outTakeMotor.setVoltage(-1);
   }

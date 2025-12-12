@@ -55,18 +55,42 @@ public final class Autos {
   }
   
   public Command straightScoreAuto(){
-     return new SequentialCommandGroup(
-      new WaitCommand(5),
-      new VisionAutoCommand(m_dts,m_objectTrackerSubsystem , 10, 3, -58.5, 0, -90),
+    return new SequentialCommandGroup(
+      new VisionAutoCommand(m_dts,m_objectTrackerSubsystem , 10, 6, -58.5, 0, -90),
       new WaitCommand(2),
-      new OuttakeCommand(m_outtakeSubsystem),
-      new OuttakeBack(m_outtakeSubsystem),
+      new ShooterCommand(m_outtakeSubsystem),
+      new WaitCommand(2),
       new IndexIntakeCommand(m_indexSubsystem),
-      //new IndexIntakeCommand(m_indexSubsystem),
       new WaitCommand(2),
-      new OuttakeCommand(m_outtakeSubsystem),
-      new OuttakeBack(m_outtakeSubsystem)          
+      new ShooterCommand(m_outtakeSubsystem)
     );
   }
   
+  public Command leftScoreAuto(){
+    return new SequentialCommandGroup(
+      new PidAutoCommand(m_dts, m_objectTrackerSubsystem, 0, -Units.inchesToMeters(148.375-11) , 0),
+      new WaitCommand(1)
+      ,new VisionAutoCommand(m_dts, m_objectTrackerSubsystem, 2, 6, -58.5 + 7, 0, -90),
+      new WaitCommand(2),
+      new ShooterCommand(m_outtakeSubsystem),
+      new WaitCommand(2),
+      new IndexIntakeCommand(m_indexSubsystem),
+      new WaitCommand(2),
+      new ShooterCommand(m_outtakeSubsystem)    
+    );
+  }
+
+  public Command rightScoreAuto(){
+    return new SequentialCommandGroup(
+      new PidAutoCommand(m_dts, m_objectTrackerSubsystem, 0, Units.inchesToMeters(148.375-11) , 0),
+      new WaitCommand(1),
+      new VisionAutoCommand(m_dts, m_objectTrackerSubsystem, 5, 6, -58.5+2, 0, -90),
+      new WaitCommand(2),
+      new ShooterCommand(m_outtakeSubsystem),
+      new WaitCommand(2),
+      new IndexIntakeCommand(m_indexSubsystem),
+      new WaitCommand(2),
+      new ShooterCommand(m_outtakeSubsystem)       
+    );
+  }
 }

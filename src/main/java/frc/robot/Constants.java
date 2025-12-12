@@ -64,8 +64,9 @@ public class Constants {
     //ELEVATOR CONSTANTS
     public static final int ELEVATOR_MOTOR_ID = 11;
     public static final int ELEVATOR_ENCODER_CLICK = 0;// number of clicks in a full rotation of the elevator motor
-    public static final double ELEVATOR_VOLTAGE = 1; 
+    public static final double ELEVATOR_VOLTAGE = 1.5; 
     public static final double ELEVATOR_UP_VOLTAGE = 0.5;
+    public static final double ELEVATOR_HOLD_VOLTAGE = 0.7;
 
     //Outtake
     public static final int OUTTAKE_VOLTAGE = 1;

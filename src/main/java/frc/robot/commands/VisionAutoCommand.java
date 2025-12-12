@@ -70,6 +70,9 @@ public class VisionAutoCommand extends Command{
 
   @Override
   public void initialize() {
+    isReachRot = false;
+    isReachX = false;
+    isReachY = false;
     m_dts.stashAngle();
     //Order in these resets has caused problems in the past. This should be correct.
     m_dts.resetAngle();    
@@ -89,6 +92,7 @@ public class VisionAutoCommand extends Command{
     rot_pose_last_check = m_dts.getPose().getRotation().getDegrees();
 
     m_visionSwerveController_rot.enableContinuousInput(-180, 180);
+    
   }
 
   
@@ -150,9 +154,12 @@ public class VisionAutoCommand extends Command{
     if(Math.abs(Math.toDegrees(m_visionSwerveController_rot.getError())) < 3){
       isReachRot = true;
     }
- SmartDashboard.putNumber("rot_error", Math.toDegrees(m_visionSwerveController_rot.getError()));
- SmartDashboard.putNumber("m_rot_target", m_rot_target);
- SmartDashboard.putNumber("rot_pose_last_check", rot_pose_last_check);
+    SmartDashboard.putNumber("rot_error", Math.toDegrees(m_visionSwerveController_rot.getError()));
+    SmartDashboard.putNumber("m_rot_target", m_rot_target);
+    SmartDashboard.putNumber("rot_pose_last_check", rot_pose_last_check);
+    SmartDashboard.putNumber("transformedTargetPoseY", transformedTargetPose.getY());
+    SmartDashboard.putNumber("transformedTargetPoseX", transformedTargetPose.getX());
+
 
     SmartDashboard.putNumber("deltaposetargetx", m_visionSwerveController_x.getError()); // -x_pose-(m_y_target - x_pose_last_check)
     SmartDashboard.putNumber("deltaposetargety", m_visionSwerveController_y.getError());
@@ -280,9 +287,9 @@ public class VisionAutoCommand extends Command{
   }
 
   private void updateDashboard() {
-    SmartDashboard.putNumber("xPidTarget", m_x_target);
-    SmartDashboard.putNumber("yPidTarget", m_y_target);
-    SmartDashboard.putNumber("rotPidTarget", m_rot_target);
+    SmartDashboard.putNumber("xPidTargetVision", m_x_target);
+    SmartDashboard.putNumber("yPidTargetVision", m_y_target);
+    SmartDashboard.putNumber("rotPidTargetVision", m_rot_target);
     SmartDashboard.putNumber("xPrime", m_xPrime);
     SmartDashboard.putNumber("zPrime", m_zPrime);
     SmartDashboard.putNumber("finalYa", m_finalYa);

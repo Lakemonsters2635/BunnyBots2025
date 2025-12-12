@@ -8,12 +8,14 @@ package frc.robot;
 import frc.robot.commands.Autos;
 import frc.robot.commands.VisionAutoCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.OuttakeAlignCommand;
 import frc.robot.commands.ElevatorDownCommand;
 import frc.robot.commands.ElevatorUpCommand;
 import frc.robot.commands.IndexIntakeCommand;
 import frc.robot.commands.OuttakeBack;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.OuttakeRemoveBacklash;
+import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ObjectTrackerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -87,15 +89,13 @@ public class RobotContainer {
 
     // outtakeTrigger.onTrue(new SequentialCommandGroup(m_outtakeCommand, m_outtakeBack));
     // outtakeTrigger.onTrue(new InstantCommand(()->m_outtakeSubsystem.setAngle(Constants.SHOOTER_TARGET_DELTA_ANGLE)));
-    outtakeTrigger.onTrue(new SequentialCommandGroup(m_outtakeRemoveBacklash,
-                                                    new WaitCommand(.1), 
-                                                    m_outtakeCommand, new WaitCommand(0.1), m_outtakeBack));
+    outtakeTrigger.onTrue(new ShooterCommand(m_outtakeSubsystem));
 
     // LEFT JOYSTICK BUTTONS
     Trigger intakeButton = new JoystickButton(leftJoystick, Constants.INTAKE_BUTTON);
     Trigger elevatorUpButton = new JoystickButton(leftJoystick, Constants.ELEVATOR_UP_BUTTON);
     Trigger elevatorDownButton = new JoystickButton(leftJoystick, Constants.ELEVATOR_DOWN_BUTTON);
-
+    Trigger shooterAlignButton = new JoystickButton(leftJoystick, 8);
     // RIGHT JOYSTICK BUTTONS
     Trigger alignButton = new JoystickButton(rightJoystick, 1);
 
@@ -103,12 +103,12 @@ public class RobotContainer {
     intakeButton.whileTrue(m_intakeCommand);
     elevatorUpButton.onTrue(m_ElevatorUpCommand);
     elevatorDownButton.onTrue(m_ElevatorDownCommand);
-
+    shooterAlignButton.onTrue(new OuttakeAlignCommand(m_outtakeSubsystem));
     // RIGHT JOYSTICK BUTTON COMMANDS
     Trigger indexButton = new JoystickButton(leftJoystick, 
     6);
     indexButton.onTrue(m_indexIntakeCommand);
-    alignButton.onTrue(new VisionAutoCommand(m_drivetrainSubsystem,m_objectTrackerSubsystem , 10, 3, -58.5, 0, -90));
+    alignButton.onTrue(new VisionAutoCommand(m_drivetrainSubsystem,m_objectTrackerSubsystem , 10, 6, -58.5, 0, -90));
   }
 
   /**
@@ -120,19 +120,9 @@ public class RobotContainer {
     // An example command will be run in autonomous
     //return new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 4, 5, -24, 0.0001, 270);
     // return m_autos.straightScoreAuto();
-    return new SequentialCommandGroup(
-      new WaitCommand(2),
-      new VisionAutoCommand(m_drivetrainSubsystem,m_objectTrackerSubsystem , 10, 6, -58.5, 0, -90),
-      new WaitCommand(2),
-      new OuttakeCommand(m_outtakeSubsystem),
-      new OuttakeBack(m_outtakeSubsystem),
-      new WaitCommand(2),
-      new IndexIntakeCommand(m_indexSubsystem),
-      //new IndexIntakeCommand(m_indexSubsystem),
-      new WaitCommand(2),
-      new OuttakeCommand(m_outtakeSubsystem),
-      new OuttakeBack(m_outtakeSubsystem)          
-    );
+    // return m_autos.leftScoreAuto();
+    return m_autos.rightScoreAuto();
+    
   }
 }
 

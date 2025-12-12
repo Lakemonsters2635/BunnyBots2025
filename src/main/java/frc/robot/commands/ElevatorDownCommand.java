@@ -17,7 +17,7 @@ public class ElevatorDownCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_elevatorSubsystem.setVoltage(-0.5);
+    m_elevatorSubsystem.setVoltage(-0.7);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
