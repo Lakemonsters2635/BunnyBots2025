@@ -19,7 +19,7 @@ public class OuttakeAlignCommand extends Command {
   public OuttakeAlignCommand(OuttakeSubsystem outtakeSubsystem) {
     m_outtakeSubsystem = outtakeSubsystem;
     m_timer = new Timer();
-
+    addRequirements(m_outtakeSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

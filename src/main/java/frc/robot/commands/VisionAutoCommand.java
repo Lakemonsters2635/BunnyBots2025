@@ -21,6 +21,7 @@ public class VisionAutoCommand extends Command{
   private final ObjectTrackerSubsystem m_ots;
 
   private final int m_tagID;
+  private int m_nearestTagID;
   // private final String YOLO_object;
 
   private final double m_xPrime, m_zPrime, m_finalYa;
@@ -78,6 +79,7 @@ public class VisionAutoCommand extends Command{
 
   @Override
   public void initialize() {
+    m_nearestTagID = Integer.parseInt(m_ots.getNearestAprilTagDetection().objectLabel.substring(10));
     isReachRot = false;
     isReachX = false;
     isReachY = false;
@@ -110,7 +112,7 @@ public class VisionAutoCommand extends Command{
     try {
         m_ots.data();
         if(isNearestAuto){
-          tempTargetPose = nearestVisionAutoData(m_xPrime, m_zPrime, m_finalYa);
+          tempTargetPose = visionAutoData(m_xPrime, m_zPrime, m_finalYa,m_nearestTagID);
         }
         else{
           tempTargetPose = visionAutoData(m_xPrime, m_zPrime, m_finalYa, m_tagID);
@@ -208,7 +210,7 @@ public class VisionAutoCommand extends Command{
 
     double m_fb_x = MathUtil.clamp(pid_x/pid_c * 1.5, -1.5, 1.5);
     double m_fb_y = MathUtil.clamp(pid_y/pid_c * 1.5, -1.5, 1.5);
-    double m_fb_rot = MathUtil.clamp(pid_rot/4, -Math.PI/4, Math.PI/4);
+    double m_fb_rot = MathUtil.clamp(pid_rot/2, -Math.PI/2, Math.PI/2);
 
     SmartDashboard.putNumber("pid_x", pid_x);
     SmartDashboard.putNumber("pid_y", pid_y);

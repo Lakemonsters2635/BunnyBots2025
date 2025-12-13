@@ -125,10 +125,11 @@ public class RobotContainer {
     alignButton.onTrue(
       new SequentialCommandGroup(
         new ParallelCommandGroup(
-          new VisionAutoCommand(m_drivetrainSubsystem,m_objectTrackerSubsystem , 10, 6, -58.5+2, 0, -90, true),
+          new VisionAutoCommand(m_drivetrainSubsystem,m_objectTrackerSubsystem , 10, 6, -58.5+2, 0, -90, true).withTimeout(6),
           new ElevatorUpCommand(m_elevatorSubsystem)
         ),
-        new WaitCommand(.5),
+        new WaitCommand(1),
+        new IndexIntakeCommand(m_indexSubsystem),
         new IndexIntakeCommand(m_indexSubsystem),
         new IndexIntakeCommand(m_indexSubsystem)
       )
