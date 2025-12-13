@@ -52,8 +52,8 @@ public class RobotContainer {
 
   public static OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
 
-  public static OuttakeCommand m_outtakeCommand = new OuttakeCommand(m_outtakeSubsystem);
-  public static OuttakeBack m_outtakeBack = new OuttakeBack(m_outtakeSubsystem);
+  // public static OuttakeCommand m_outtakeCommand = new OuttakeCommand(m_outtakeSubsystem);
+  // public static OuttakeBack m_outtakeBack = new OuttakeBack(m_outtakeSubsystem);
   public static IndexSubsystem m_indexSubsystem = new IndexSubsystem();
 
   public static IndexIntakeCommand m_indexIntakeCommand = new IndexIntakeCommand(m_indexSubsystem);
@@ -87,35 +87,41 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
+    // LEFT JOYSTICK BUTTONS
     Trigger outtakeTrigger = new JoystickButton(leftJoystick, Constants.SHOOTER_BUTTON);
-    Trigger resetSwerveButton = new JoystickButton(rightJoystick, 9);
+    Trigger singleOuttakeTrigger = new JoystickButton(leftJoystick, 5);    
+    Trigger shooterAlignButton = new JoystickButton(leftJoystick, 8);
+    Trigger indexButton = new JoystickButton(leftJoystick, 6);
+
     // outtakeTrigger.onTrue(new SequentialCommandGroup(m_outtakeCommand, m_outtakeBack));
     // outtakeTrigger.onTrue(new InstantCommand(()->m_outtakeSubsystem.setAngle(Constants.SHOOTER_TARGET_DELTA_ANGLE)));
-    outtakeTrigger.onTrue(new ShooterCommand(m_outtakeSubsystem));
-
-    // LEFT JOYSTICK BUTTONS
+    
+    // RIGHT JOYSTICK BUTTONS
+    Trigger resetSwerveButton = new JoystickButton(rightJoystick, 9);
     Trigger intakeButton = new JoystickButton(rightJoystick, Constants.INTAKE_BUTTON);
     Trigger reverseIntakeButton = new JoystickButton(rightJoystick, 4);
     Trigger elevatorUpButton = new JoystickButton(rightJoystick, Constants.ELEVATOR_UP_BUTTON);
     Trigger elevatorDownButton = new JoystickButton(rightJoystick, Constants.ELEVATOR_DOWN_BUTTON);
-    Trigger shooterAlignButton = new JoystickButton(leftJoystick, 8);
-    // RIGHT JOYSTICK BUTTONS
     Trigger alignButton = new JoystickButton(rightJoystick, 2);
+    
+    
     resetSwerveButton.onTrue(new SequentialCommandGroup(
       new InstantCommand(()->m_drivetrainSubsystem.resetAngle()),
       new InstantCommand(()-> m_drivetrainSubsystem.zeroOdometry())
       )
-    );
+      );
+      
+      // LEFT JOYSTICK BUTTON COMMANDS
+      intakeButton.whileTrue(m_intakeCommand);
+      reverseIntakeButton.whileTrue(new ReverseIntakeCommand(m_intakeSubsystem));
+      elevatorUpButton.onTrue(m_elevatorUpCommand);
+      elevatorDownButton.onTrue(m_elevatorDownCommand);
+      // shooterAlignButton.onTrue(new OuttakeAlignCommand(m_outtakeSubsystem));
 
-    // LEFT JOYSTICK BUTTON COMMANDS
-    intakeButton.whileTrue(m_intakeCommand);
-    reverseIntakeButton.whileTrue(new ReverseIntakeCommand(m_intakeSubsystem));
-    elevatorUpButton.onTrue(m_elevatorUpCommand);
-    elevatorDownButton.onTrue(m_elevatorDownCommand);
-    shooterAlignButton.onTrue(new OuttakeAlignCommand(m_outtakeSubsystem));
+      singleOuttakeTrigger.onTrue(new ShooterCommand(m_outtakeSubsystem, true));
+      outtakeTrigger.onTrue(new ShooterCommand(m_outtakeSubsystem));
+
     // RIGHT JOYSTICK BUTTON COMMANDS
-    Trigger indexButton = new JoystickButton(leftJoystick, 
-    6);
     indexButton.onTrue(m_indexIntakeCommand);
     alignButton.onTrue(new ParallelCommandGroup(
       new VisionAutoCommand(m_drivetrainSubsystem,m_objectTrackerSubsystem , 10, 6, -58.5, 0, -90, true),
@@ -132,7 +138,7 @@ public class RobotContainer {
     //return new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 4, 5, -24, 0.0001, 270);
     // return m_autos.straightScoreAuto();
     // return m_autos.leftScoreAuto();
-    return m_autos.rightScoreAuto();
+    return m_autos.straightScoreAuto();
     // return null;
     
   }

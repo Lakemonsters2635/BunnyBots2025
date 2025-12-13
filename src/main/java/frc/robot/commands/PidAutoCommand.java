@@ -107,8 +107,8 @@ public class PidAutoCommand extends Command {
     double y_clamp = pid_c > speed_clamp ? (speed_clamp * (Math.abs(pid_y) / pid_c)) : speed_clamp;
 
     //Clamps for safety and allows the fadeInDistance to ramp up speed instead of instantly accelerating too fast
-    double m_fb_x = MathUtil.clamp(pid_x/2, -x_clamp/2, x_clamp/2);
-    double m_fb_y = MathUtil.clamp(pid_y/2, -y_clamp/2, y_clamp/2);
+    double m_fb_x = MathUtil.clamp(pid_x, -x_clamp, x_clamp);
+    double m_fb_y = MathUtil.clamp(pid_y, -y_clamp, y_clamp);
     double m_fb_rot = MathUtil.clamp(pid_rot, -PURE_VISION_MAX_RAD_PER_SEC, PURE_VISION_MAX_RAD_PER_SEC);
 
     m_dts.drive(m_fb_x, m_fb_y, m_fb_rot, true);

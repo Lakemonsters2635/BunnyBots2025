@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.concurrent.BlockingDeque;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,19 +19,33 @@ public class OuttakeCommand extends Command {
   
   public OuttakeSubsystem m_outtakeSubsystem;
   private Timer timer;
+  boolean isSingle = false;
   
+  public OuttakeCommand(OuttakeSubsystem outtakeSubsystem, boolean isSingle) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    m_outtakeSubsystem = outtakeSubsystem;
+    timer = new Timer();
+    // addRequirements(m_outtakeSubsystem);
+    this.isSingle = isSingle;
+  }
+
   public OuttakeCommand(OuttakeSubsystem outtakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_outtakeSubsystem = outtakeSubsystem;
     timer = new Timer();
-    addRequirements(m_outtakeSubsystem);
+    // addRequirements(m_outtakeSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     m_outtakeSubsystem.setPID(Constants.SHOOTER_P, Constants.SHOOTER_I, Constants.SHOOTER_D);
-    m_outtakeSubsystem.setAngle(Constants.SHOOTER_TARGET_DELTA_ANGLE);
+    if(isSingle){
+      m_outtakeSubsystem.setAngle(Constants.SHOOTER_TARGET_DELTA_ANGLE+.1);
+    }
+    else{
+      m_outtakeSubsystem.setAngle(Constants.SHOOTER_TARGET_DELTA_ANGLE);
+    }
     timer.reset();
     timer.start();
     // SmartDashboard.putBoolean("isFin", false);

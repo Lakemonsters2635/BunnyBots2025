@@ -17,12 +17,23 @@ public class ShooterCommand extends SequentialCommandGroup {
   
   public ShooterCommand(OuttakeSubsystem outtakeSubsystem) {
     m_outtakeSubsystem = outtakeSubsystem;
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+    
     addCommands(
       new OuttakeAlignCommand(m_outtakeSubsystem),
       new WaitCommand(0.2),
       new OuttakeCommand(outtakeSubsystem), 
+      new WaitCommand(0.1), 
+      new OuttakeBack(outtakeSubsystem)
+    );
+  }
+
+  public ShooterCommand(OuttakeSubsystem outtakeSubsystem, boolean isSingle){
+    m_outtakeSubsystem = outtakeSubsystem;
+    
+    addCommands(
+      new OuttakeAlignCommand(m_outtakeSubsystem),
+      new WaitCommand(0.2),
+      new OuttakeCommand(outtakeSubsystem, isSingle), 
       new WaitCommand(0.1), 
       new OuttakeBack(outtakeSubsystem)
     );

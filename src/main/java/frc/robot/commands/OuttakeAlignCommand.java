@@ -39,7 +39,7 @@ public class OuttakeAlignCommand extends Command {
   @Override
   public void execute() {
     if(m_outtakeSubsystem.getPos() - initialPose > 1){
-      m_outtakeSubsystem.setMotorPower(-2);
+      m_outtakeSubsystem.setMotorPower(-1.5);
       m_timer.start();
       if(m_timer.get()< 0.1){
         m_outtakeSubsystem.setMotorPower(0.1);
