@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -23,12 +24,16 @@ public class OuttakeSubsystem extends SubsystemBase {
   public double initialEncoderValue;
   double targetPose;
   TalonFX outTakeMotor;
+  VoltageConfigs voltageConfigs;
 
   Joystick m_joystick = new Joystick(0);
 
   public OuttakeSubsystem() {
     outTakeMotor = new TalonFX(13);
+    voltageConfigs = new VoltageConfigs();
+    voltageConfigs.SupplyVoltageTimeConstant = 9;
     initialEncoderValue = outTakeMotor.getPosition().getValueAsDouble();
+    outTakeMotor.getConfigurator().apply(voltageConfigs);
     slot0Configs.kG = 0;
     // setPID(0, 0, 0);
     setPID(Constants.SHOOTER_P, Constants.SHOOTER_I, Constants.SHOOTER_D);

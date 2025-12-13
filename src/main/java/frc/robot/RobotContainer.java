@@ -68,7 +68,7 @@ public class RobotContainer {
   public static ElevatorDownCommand m_elevatorDownCommand = new ElevatorDownCommand(m_elevatorSubsystem);
   public static OuttakeRemoveBacklash m_outtakeRemoveBacklash = new OuttakeRemoveBacklash(m_outtakeSubsystem);
 
-  //public static Autos m_autos = new Autos(m_drivetrainSubsystem, m_outtakeSubsystem, m_indexSubsystem, m_elevatorSubsystem,m_objectTrackerSubsystem, m_intakeSubsystem);
+  public static Autos m_autos = new Autos(m_drivetrainSubsystem, m_outtakeSubsystem, m_indexSubsystem, m_elevatorSubsystem,m_objectTrackerSubsystem, m_intakeSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -119,7 +119,7 @@ public class RobotContainer {
     indexButton.onTrue(m_indexIntakeCommand);
     alignButton.onTrue(new ParallelCommandGroup(
       new VisionAutoCommand(m_drivetrainSubsystem,m_objectTrackerSubsystem , 10, 6, -58.5, 0, -90, true),
-      m_elevatorUpCommand));
+      new ElevatorUpCommand(m_elevatorSubsystem)));
   }
 
   /**
@@ -132,8 +132,8 @@ public class RobotContainer {
     //return new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 4, 5, -24, 0.0001, 270);
     // return m_autos.straightScoreAuto();
     // return m_autos.leftScoreAuto();
-    //return m_autos.rightScoreAuto();
-    return null;
+    return m_autos.rightScoreAuto();
+    // return null;
     
   }
 }

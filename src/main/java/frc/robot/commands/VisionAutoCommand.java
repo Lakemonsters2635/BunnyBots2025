@@ -127,7 +127,10 @@ public class VisionAutoCommand extends Command{
           x_pose_last_check = m_dts.getPose().getX();
           y_pose_last_check = m_dts.getPose().getY();
           rot_pose_last_check = m_dts.getPose().getRotation().getDegrees();
-        }        
+        }
+        else{
+          targetPose = new Pose2d(0,0, new Rotation2d(0));
+        }     
     } catch (Exception e) {
         System.out.println(e);
     }
