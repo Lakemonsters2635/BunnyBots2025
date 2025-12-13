@@ -146,7 +146,7 @@ public class RobotContainer {
     //return new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 4, 5, -24, 0.0001, 270);
     // return m_autos.straightScoreAuto();
     // return m_autos.leftScoreAuto();
-    return m_autos.straightScoreAuto();
+    return m_autos.rightScoreAuto();
     // return null;
   }
 }
