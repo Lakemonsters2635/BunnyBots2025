@@ -101,6 +101,7 @@ public class RobotContainer {
     Trigger intakeButton = new JoystickButton(rightJoystick, Constants.INTAKE_BUTTON);
     Trigger reverseIntakeButton = new JoystickButton(rightJoystick, 4);
     Trigger elevatorUpButton = new JoystickButton(rightJoystick, Constants.ELEVATOR_UP_BUTTON);
+
     Trigger elevatorDownButton = new JoystickButton(rightJoystick, Constants.ELEVATOR_DOWN_BUTTON);
     Trigger alignButton = new JoystickButton(rightJoystick, 2);
     
@@ -108,24 +109,30 @@ public class RobotContainer {
     resetSwerveButton.onTrue(new SequentialCommandGroup(
       new InstantCommand(()->m_drivetrainSubsystem.resetAngle()),
       new InstantCommand(()-> m_drivetrainSubsystem.zeroOdometry())
-      )
-      );
-      
-      // LEFT JOYSTICK BUTTON COMMANDS
-      intakeButton.whileTrue(m_intakeCommand);
-      reverseIntakeButton.whileTrue(new ReverseIntakeCommand(m_intakeSubsystem));
-      elevatorUpButton.onTrue(m_elevatorUpCommand);
-      elevatorDownButton.onTrue(m_elevatorDownCommand);
-      // shooterAlignButton.onTrue(new OuttakeAlignCommand(m_outtakeSubsystem));
-
-      singleOuttakeTrigger.onTrue(new ShooterCommand(m_outtakeSubsystem, true));
-      outtakeTrigger.onTrue(new ShooterCommand(m_outtakeSubsystem));
+    ));
+    
+    // LEFT JOYSTICK BUTTON COMMANDS
+    intakeButton.whileTrue(m_intakeCommand);
+    reverseIntakeButton.whileTrue(new ReverseIntakeCommand(m_intakeSubsystem));
+    elevatorUpButton.onTrue(m_elevatorUpCommand);
+    elevatorDownButton.onTrue(m_elevatorDownCommand);
+    // shooterAlignButton.onTrue(new OuttakeAlignCommand(m_outtakeSubsystem));
+    singleOuttakeTrigger.onTrue(new ShooterCommand(m_outtakeSubsystem, true));
+    outtakeTrigger.onTrue(new ShooterCommand(m_outtakeSubsystem));
 
     // RIGHT JOYSTICK BUTTON COMMANDS
     indexButton.onTrue(m_indexIntakeCommand);
-    alignButton.onTrue(new ParallelCommandGroup(
-      new VisionAutoCommand(m_drivetrainSubsystem,m_objectTrackerSubsystem , 10, 6, -58.5, 0, -90, true),
-      new ElevatorUpCommand(m_elevatorSubsystem)));
+    alignButton.onTrue(
+      new SequentialCommandGroup(
+        new ParallelCommandGroup(
+          new VisionAutoCommand(m_drivetrainSubsystem,m_objectTrackerSubsystem , 10, 6, -58.5+2, 0, -90, true),
+          new ElevatorUpCommand(m_elevatorSubsystem)
+        ),
+        new WaitCommand(.5),
+        new IndexIntakeCommand(m_indexSubsystem),
+        new IndexIntakeCommand(m_indexSubsystem)
+      )
+    );
   }
 
   /**
@@ -140,7 +147,6 @@ public class RobotContainer {
     // return m_autos.leftScoreAuto();
     return m_autos.straightScoreAuto();
     // return null;
-    
   }
 }
 
