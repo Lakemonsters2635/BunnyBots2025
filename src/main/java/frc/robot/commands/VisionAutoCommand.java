@@ -33,11 +33,15 @@ public class VisionAutoCommand extends Command{
     double x_pose_last_check;
     double y_pose_last_check;
     double rot_pose_last_check;
+
+    Pose2d tempTargetPose;
   
     //Some of the variables arent used outside of the constructor so can be deleted but keeping it for debugging and future use
     private double m_x_start, m_y_start, m_rot_start; 
 
     boolean isReachX = false, isReachY = false, isReachRot = false;
+
+    boolean isNearestAuto = false;
   
     //Probably need to fine tune constants depending on the bot
     private final PIDController m_visionSwerveController_x = new PIDController(10, 0, 0); 
@@ -50,7 +54,7 @@ public class VisionAutoCommand extends Command{
     private final Trigger cancelTeleAuto = new JoystickButton(RobotContainer.rightJoystick, 6); //Button in case visionAuto goes haywire
 
     //Constructor for a visionAutoCommand
-    public VisionAutoCommand(DrivetrainSubsystem drivetrainSubsystem, ObjectTrackerSubsystem objectTrackerSubsystem, int tagID, double xPrime, double zPrime, double finalYa, double cameraRotation) {
+    public VisionAutoCommand(DrivetrainSubsystem drivetrainSubsystem, ObjectTrackerSubsystem objectTrackerSubsystem, int tagID, double xPrime, double zPrime, double finalYa, double cameraRotation, boolean isNearestAuto) {
       m_dts = drivetrainSubsystem;
       m_ots = objectTrackerSubsystem;
       this.m_tagID = tagID;
@@ -58,6 +62,7 @@ public class VisionAutoCommand extends Command{
       m_zPrime = zPrime;
       m_finalYa = finalYa;
       m_cameraRotation = cameraRotation;
+      this.isNearestAuto = isNearestAuto;
       // YOLO_object = yoloObject;
   
     //   targetPose = visionAutoData(xPrime, zPrime, finalYa, tagID);
@@ -67,6 +72,8 @@ public class VisionAutoCommand extends Command{
   
       addRequirements(m_dts, m_ots);
     }
+
+
 
   @Override
   public void initialize() {
@@ -101,7 +108,12 @@ public class VisionAutoCommand extends Command{
   public void execute() {
     try {
         m_ots.data();
-        Pose2d tempTargetPose = visionAutoData(m_xPrime, m_zPrime, m_finalYa, m_tagID) ;
+        if(isNearestAuto){
+          tempTargetPose = nearestVisionAutoData(m_xPrime, m_zPrime, m_finalYa);
+        }
+        else{
+          tempTargetPose = visionAutoData(m_xPrime, m_zPrime, m_finalYa, m_tagID);
+        }
         SmartDashboard.putBoolean("isNull", tempTargetPose == null);
         // This if statement will run only if we are able to see the april tag
         if(tempTargetPose != null){
@@ -248,6 +260,47 @@ public class VisionAutoCommand extends Command{
       SmartDashboard.putBoolean("ableToSeeAT", false);
       return null;
     } 
+
+  
+    SmartDashboard.putBoolean("ableToSeeAT", true);
+
+
+    // detection = m_ots.
+
+    double visionYa = -detection.ya;
+    double x_vt = xPrime * Math.cos(Math.toRadians(visionYa)) - zPrime * Math.sin(Math.toRadians(visionYa));
+    double z_vt = xPrime * Math.sin(Math.toRadians(visionYa)) + zPrime * Math.cos(Math.toRadians(visionYa));
+    //Should be offset variables and change based of camera location relative to the center of the robot
+    double deltaRobotX = -(detection.x + x_vt - Constants.CAM_X_OFFSET);
+    double deltaRobotY = -(detection.z + z_vt - Constants.CAM_Y_OFFSET);
+
+    // double deltaRobotX = -(detection.x + x_vt - Constants.VISION_TOTE_CAM_OFFSET[0]);
+    // double deltaRobotY = -(detection.z + z_vt - Constants.VISION_TOTE_CAM_OFFSET[1]);
+
+    double botRadians = 0; //Units.degreesToRadians(m_dts.getPose().getRotation().getDegrees());
+    double deltaFieldX = deltaRobotX * Math.cos(botRadians) - deltaRobotY * Math.sin(botRadians);
+    double deltaFieldY = deltaRobotX * Math.sin(botRadians) + deltaRobotY * Math.cos(botRadians);
+    double finalAngle = visionYa + finalYa + Units.radiansToDegrees(botRadians);
+
+    return new Pose2d(Units.inchesToMeters(deltaFieldX), Units.inchesToMeters(deltaFieldY), new Rotation2d(Units.degreesToRadians(finalAngle)));
+  }
+
+  private Pose2d nearestVisionAutoData(double xPrime, double zPrime, double finalYa) {
+    Detection detection = null;
+    for (int i = 0; i < 100; i++) { // TODO: do we still want to keep for loop?
+      try {
+        detection = m_ots.getNearestAprilTagDetection();
+        break;
+      } catch (Exception e) {
+        System.out.println("Failed vision attempt " + i);
+      }
+    }
+    if (detection == null){
+      SmartDashboard.putBoolean("ableToSeeAT", false);
+      return null;
+    } 
+
+  
     SmartDashboard.putBoolean("ableToSeeAT", true);
 
 

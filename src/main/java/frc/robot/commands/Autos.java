@@ -56,7 +56,7 @@ public final class Autos {
   
   public Command straightScoreAuto(){
     return new SequentialCommandGroup(
-      new VisionAutoCommand(m_dts,m_objectTrackerSubsystem , 10, 6, -58.5, 0, -90),
+      new VisionAutoCommand(m_dts,m_objectTrackerSubsystem , 10, 6, -58.5, 0, -90, true),
       new WaitCommand(2),
       new ShooterCommand(m_outtakeSubsystem),
       new WaitCommand(2),
@@ -70,7 +70,7 @@ public final class Autos {
     return new SequentialCommandGroup(
       new PidAutoCommand(m_dts, m_objectTrackerSubsystem, 0, -Units.inchesToMeters(148.375-11) , 0),
       new WaitCommand(1)
-      ,new VisionAutoCommand(m_dts, m_objectTrackerSubsystem, 2, 6, -58.5 + 7, 0, -90),
+      ,new VisionAutoCommand(m_dts, m_objectTrackerSubsystem, 2, 6, -58.5 + 7, 0, -90, true),
       new WaitCommand(2),
       new ShooterCommand(m_outtakeSubsystem),
       new WaitCommand(2),
@@ -84,7 +84,7 @@ public final class Autos {
     return new SequentialCommandGroup(
       new PidAutoCommand(m_dts, m_objectTrackerSubsystem, 0, Units.inchesToMeters(148.375-11) , 0),
       new WaitCommand(1),
-      new VisionAutoCommand(m_dts, m_objectTrackerSubsystem, 5, 6, -58.5+2, 0, -90),
+      new VisionAutoCommand(m_dts, m_objectTrackerSubsystem, 5, 6, -58.5+2, 0, -90, true),
       new WaitCommand(2),
       new ShooterCommand(m_outtakeSubsystem),
       new WaitCommand(2),

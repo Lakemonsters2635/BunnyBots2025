@@ -5,23 +5,23 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ElevatorUpCommand extends Command {
-  private static ElevatorSubsystem m_elevatorSubsystem;
-
-  public ElevatorUpCommand(ElevatorSubsystem elevatorSubsystem) {
-    m_elevatorSubsystem = elevatorSubsystem;
-    addRequirements(m_elevatorSubsystem);
+public class ReverseIntakeCommand extends Command {
+  /** Creates a new IntakeCommand. */
+  private IntakeSubsystem m_intakeSubsystem;
+  
+  public ReverseIntakeCommand(IntakeSubsystem intakeSubsystem ) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    m_intakeSubsystem = intakeSubsystem;
+    addRequirements(m_intakeSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_elevatorSubsystem.setVoltage(Constants.ELEVATOR_VOLTAGE);
-
+    m_intakeSubsystem.reverseIntake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -31,15 +31,12 @@ public class ElevatorUpCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_elevatorSubsystem.setVoltage(Constants.ELEVATOR_HOLD_VOLTAGE);
+    m_intakeSubsystem.stopIntake();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_elevatorSubsystem.getEncoderValue() > 15){
-      return true;
-    }
     return false;
   }
 }

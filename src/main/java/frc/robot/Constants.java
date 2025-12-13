@@ -105,7 +105,7 @@ public class Constants {
     public static final double INDEX_EXPECTED_POSITION = -90; //In degrees
 
     //BUTTONS
-    public static final int INTAKE_BUTTON = 4;// TODO: change ID when given robot
+    public static final int INTAKE_BUTTON = 1;// TODO: change ID when given robot
     public static final int ELEVATOR_UP_BUTTON = 5;
     public static final int ELEVATOR_DOWN_BUTTON = 3;
     

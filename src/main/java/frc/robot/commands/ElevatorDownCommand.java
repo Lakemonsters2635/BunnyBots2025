@@ -12,6 +12,7 @@ public class ElevatorDownCommand extends Command {
 
   public ElevatorDownCommand(ElevatorSubsystem elevatorSubsystem) {
     m_elevatorSubsystem = elevatorSubsystem;
+    addRequirements(m_elevatorSubsystem);
   }
 
   // Called when the command is initially scheduled.
