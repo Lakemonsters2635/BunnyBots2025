@@ -67,6 +67,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     return m_elevatorMotor.getEncoder().getPosition();
   }
 
+  public boolean isAtGroundPosition(){
+    if(getEncoderValue() > 0.5){
+      return false;
+    }
+    return true;
+  }
   @Override
   public void periodic() {
     // targetPos = MathUtil.clamp(targetPos, 0, 90);

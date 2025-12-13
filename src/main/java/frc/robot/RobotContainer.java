@@ -26,6 +26,7 @@ import frc.robot.subsystems.OuttakeSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -62,9 +63,9 @@ public class RobotContainer {
 
   // COMMANDS
   // public static VisionAutoCommand m_visionAutoCommand = new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 8, 5, -24, 0.0001,90);
-  public static IntakeCommand m_intakeCommand = new IntakeCommand(m_intakeSubsystem);
-  public static ElevatorUpCommand m_ElevatorUpCommand = new ElevatorUpCommand(m_elevatorSubsystem);
-  public static ElevatorDownCommand m_ElevatorDownCommand = new ElevatorDownCommand(m_elevatorSubsystem);
+  public static IntakeCommand m_intakeCommand = new IntakeCommand(m_intakeSubsystem, m_elevatorSubsystem);
+  public static ElevatorUpCommand m_elevatorUpCommand = new ElevatorUpCommand(m_elevatorSubsystem);
+  public static ElevatorDownCommand m_elevatorDownCommand = new ElevatorDownCommand(m_elevatorSubsystem);
   public static OuttakeRemoveBacklash m_outtakeRemoveBacklash = new OuttakeRemoveBacklash(m_outtakeSubsystem);
 
   //public static Autos m_autos = new Autos(m_drivetrainSubsystem, m_outtakeSubsystem, m_indexSubsystem, m_elevatorSubsystem,m_objectTrackerSubsystem, m_intakeSubsystem);
@@ -109,14 +110,16 @@ public class RobotContainer {
     // LEFT JOYSTICK BUTTON COMMANDS
     intakeButton.whileTrue(m_intakeCommand);
     reverseIntakeButton.whileTrue(new ReverseIntakeCommand(m_intakeSubsystem));
-    elevatorUpButton.onTrue(m_ElevatorUpCommand);
-    elevatorDownButton.onTrue(m_ElevatorDownCommand);
+    elevatorUpButton.onTrue(m_elevatorUpCommand);
+    elevatorDownButton.onTrue(m_elevatorDownCommand);
     shooterAlignButton.onTrue(new OuttakeAlignCommand(m_outtakeSubsystem));
     // RIGHT JOYSTICK BUTTON COMMANDS
     Trigger indexButton = new JoystickButton(leftJoystick, 
     6);
     indexButton.onTrue(m_indexIntakeCommand);
-    alignButton.onTrue(new VisionAutoCommand(m_drivetrainSubsystem,m_objectTrackerSubsystem , 10, 6, -58.5, 0, -90, true));
+    alignButton.onTrue(new ParallelCommandGroup(
+      new VisionAutoCommand(m_drivetrainSubsystem,m_objectTrackerSubsystem , 10, 6, -58.5, 0, -90, true),
+      m_elevatorUpCommand));
   }
 
   /**
