@@ -38,7 +38,7 @@ public class OuttakeAlignCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_outtakeSubsystem.getPos() - initialPose > 1){
+    if(m_outtakeSubsystem.getPos() > 1-.26){
       m_outtakeSubsystem.setMotorPower(-1.5);
       m_timer.start();
       if(m_timer.get()< 0.1){
@@ -47,7 +47,7 @@ public class OuttakeAlignCommand extends Command {
         isComingDown = true;
       }
     }
-    if(m_outtakeSubsystem.getPos() - initialPose < 0.5 && isComingDown){
+    if(m_outtakeSubsystem.getPos() < 0.5-.26 && isComingDown){
       m_outtakeSubsystem.setMotorPower(0.22);
       isAtBottom = true;
     }
@@ -61,7 +61,7 @@ public class OuttakeAlignCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_outtakeSubsystem.getPos()-initialPose < 0.1 && isAtBottom){
+    if(m_outtakeSubsystem.getPos() < 0.1-.26 && isAtBottom){
       return true;
     }
     return false;

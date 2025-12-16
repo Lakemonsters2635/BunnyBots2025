@@ -32,6 +32,8 @@ public class VisionAutoCommand extends Command{
     private double m_cameraRotation; 
     Pose2d targetPose;
 
+    boolean finishIt = false;
+
     double x_pose_last_check;
     double y_pose_last_check;
     double rot_pose_last_check;
@@ -79,7 +81,12 @@ public class VisionAutoCommand extends Command{
 
   @Override
   public void initialize() {
+    try{
     m_nearestTagID = Integer.parseInt(m_ots.getNearestAprilTagDetection().objectLabel.substring(10));
+    }
+    catch(Exception e){
+      finishIt = true;
+    }
     isReachRot = false;
     isReachX = false;
     isReachY = false;
@@ -112,7 +119,7 @@ public class VisionAutoCommand extends Command{
     try {
         m_ots.data();
         if(isNearestAuto){
-          tempTargetPose = visionAutoData(m_xPrime, m_zPrime, m_finalYa,m_nearestTagID);
+          tempTargetPose = visionAutoData(m_xPrime, m_zPrime, m_finalYa, m_nearestTagID);
         }
         else{
           tempTargetPose = visionAutoData(m_xPrime, m_zPrime, m_finalYa, m_tagID);
@@ -237,7 +244,7 @@ public class VisionAutoCommand extends Command{
     double rot = m_dts.getPose().getRotation().getDegrees();
 
     //Manual Stop by Driver
-    if (cancelTeleAuto.getAsBoolean()){
+    if (cancelTeleAuto.getAsBoolean() || finishIt){
       return true;
     } 
 

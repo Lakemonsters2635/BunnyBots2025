@@ -68,7 +68,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean isAtGroundPosition(){
-    if(getEncoderValue() > 0.5){
+    if(getEncoderValue() > 5){
       return false;
     }
     return true;

@@ -37,6 +37,7 @@ public class OuttakeSubsystem extends SubsystemBase {
     slot0Configs.kG = 0;
     // setPID(0, 0, 0);
     setPID(Constants.SHOOTER_P, Constants.SHOOTER_I, Constants.SHOOTER_D);
+    SmartDashboard.putNumber("initialOuttakePos", initialEncoderValue);
 
   }
 

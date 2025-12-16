@@ -23,7 +23,10 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -141,14 +144,20 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  public SendableChooser<Command> getAutonomousCommand() {
+    SendableChooser<Command> m_autoChooser = new SendableChooser<>();
+    // SendableChooser<Command> m_alianceChooser = new SendableChooser<>();
     // An example command will be run in autonomous
     //return new VisionAutoCommand(m_drivetrainSubsystem, m_objectTrackerSubsystem, 4, 5, -24, 0.0001, 270);
+
     // return m_autos.straightScoreAuto();
     // return m_autos.leftScoreAuto();
-    return m_autos.rightScoreAuto();
+    // return m_autos.rightScoreAuto();
+    m_autoChooser.setDefaultOption("RightAuto", m_autos.rightScoreAuto());
+    m_autoChooser.addOption("MidAuto", m_autos.straightScoreAuto());
+    m_autoChooser.addOption("LeftAuto", m_autos.leftScoreAuto());
+    SmartDashboard.putData(m_autoChooser);
+    return m_autoChooser;
     // return null;
   }
 }
-
-

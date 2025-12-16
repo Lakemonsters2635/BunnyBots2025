@@ -71,8 +71,8 @@ public class Constants {
     //Outtake
     public static final int OUTTAKE_VOLTAGE = 1;
     public static final int INTAKE_VOLTAGE = 1;
-    public static final double SHOOTER_TARGET_DELTA_ANGLE = 1.4;
-    public static final double SHOOTER_P = 18;
+    public static final double SHOOTER_TARGET_DELTA_ANGLE = 1.4+.26;
+    public static final double SHOOTER_P = 20;
     public static final double SHOOTER_I = 0;
     public static final double SHOOTER_D = .2;
 
