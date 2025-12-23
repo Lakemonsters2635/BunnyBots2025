@@ -14,28 +14,26 @@ import frc.robot.subsystems.OuttakeSubsystem;
 public class ShooterCommand extends SequentialCommandGroup {
   /** Creates a new ShooterCommand. */
   OuttakeSubsystem m_outtakeSubsystem;
-  
+
   public ShooterCommand(OuttakeSubsystem outtakeSubsystem) {
     m_outtakeSubsystem = outtakeSubsystem;
-    
+
     addCommands(
-      new OuttakeAlignCommand(m_outtakeSubsystem),
-      new WaitCommand(0.2),
-      new OuttakeCommand(outtakeSubsystem), 
-      new WaitCommand(0.1), 
-      new OuttakeBack(outtakeSubsystem)
-    );
+        new OuttakeAlignCommand(m_outtakeSubsystem),
+        new WaitCommand(0.2),
+        new OuttakeCommand(outtakeSubsystem),
+        new WaitCommand(0.1),
+        new OuttakeBack(outtakeSubsystem));
   }
 
-  public ShooterCommand(OuttakeSubsystem outtakeSubsystem, boolean isSingle){
+  public ShooterCommand(OuttakeSubsystem outtakeSubsystem, boolean isSingle) {
     m_outtakeSubsystem = outtakeSubsystem;
-    
+
     addCommands(
-      new OuttakeAlignCommand(m_outtakeSubsystem),
-      new WaitCommand(0.2),
-      new OuttakeCommand(outtakeSubsystem, isSingle), 
-      new WaitCommand(0.1), 
-      new OuttakeBack(outtakeSubsystem)
-    );
+        new OuttakeAlignCommand(m_outtakeSubsystem),
+        new WaitCommand(0.2),
+        new OuttakeCommand(outtakeSubsystem, isSingle),
+        new WaitCommand(0.1),
+        new OuttakeBack(outtakeSubsystem));
   }
 }

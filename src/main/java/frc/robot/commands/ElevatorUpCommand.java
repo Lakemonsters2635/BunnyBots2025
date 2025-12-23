@@ -21,7 +21,6 @@ public class ElevatorUpCommand extends Command {
   @Override
   public void initialize() {
     m_elevatorSubsystem.setVoltage(Constants.ELEVATOR_VOLTAGE);
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,7 +36,7 @@ public class ElevatorUpCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_elevatorSubsystem.getEncoderValue() > 15){
+    if (m_elevatorSubsystem.getEncoderValue() > 15) {
       return true;
     }
     return false;

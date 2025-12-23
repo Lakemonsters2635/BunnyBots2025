@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import java.util.concurrent.BlockingDeque;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,11 +14,11 @@ import frc.robot.subsystems.OuttakeSubsystem;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class OuttakeCommand extends Command {
   /** Creates a new OuttakeCommand. */
-  
   public OuttakeSubsystem m_outtakeSubsystem;
+
   private Timer timer;
   boolean isSingle = false;
-  
+
   public OuttakeCommand(OuttakeSubsystem outtakeSubsystem, boolean isSingle) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_outtakeSubsystem = outtakeSubsystem;
@@ -40,10 +38,9 @@ public class OuttakeCommand extends Command {
   @Override
   public void initialize() {
     m_outtakeSubsystem.setPID(Constants.SHOOTER_P, Constants.SHOOTER_I, Constants.SHOOTER_D);
-    if(isSingle){
-      m_outtakeSubsystem.setAngle(Constants.SHOOTER_TARGET_DELTA_ANGLE+.1);
-    }
-    else{
+    if (isSingle) {
+      m_outtakeSubsystem.setAngle(Constants.SHOOTER_TARGET_DELTA_ANGLE + .1);
+    } else {
       m_outtakeSubsystem.setAngle(Constants.SHOOTER_TARGET_DELTA_ANGLE);
     }
     timer.reset();
@@ -63,7 +60,7 @@ public class OuttakeCommand extends Command {
   }
 
   // TODO: Move to a math tools library, see the commented in isFinished()
-  public boolean isCloseTo(double target, double ref, double threshold){
+  public boolean isCloseTo(double target, double ref, double threshold) {
     return Math.abs(target - ref) < threshold;
   }
 
@@ -71,13 +68,14 @@ public class OuttakeCommand extends Command {
   @Override
   public boolean isFinished() {
     // TODO: change limit value(0) later when tested
-    if(MathUtil.isNear(Constants.SHOOTER_TARGET_DELTA_ANGLE, m_outtakeSubsystem.getPos(),  .2)
-        && (timer.get() > .2)){
+    if (MathUtil.isNear(Constants.SHOOTER_TARGET_DELTA_ANGLE, m_outtakeSubsystem.getPos(), .2)
+        && (timer.get() > .2)) {
       SmartDashboard.putBoolean("isFin", true);
       return true;
     }
 
-    // if( isCloseTo(Constants.SHOOTER_TARGET_DELTA_ANGLE, m_outtakeSubsystem.getPosCalibrated(),  .2)
+    // if( isCloseTo(Constants.SHOOTER_TARGET_DELTA_ANGLE, m_outtakeSubsystem.getPosCalibrated(),
+    // .2)
     //     && (timer.get() > .2)){
     //   // SmartDashboard.putBoolean("isFin", true);
     //   System.out.println("OUTTAKECOMMAND ENDED !!!!!!!!!!!!!!!");
@@ -85,6 +83,5 @@ public class OuttakeCommand extends Command {
     //   return true;
     // }
     return false;
-    
   }
 }

@@ -34,10 +34,10 @@ public class ElevatorDownCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_elevatorSubsystem.getEncoderValue() < 0.5){
+    if (m_elevatorSubsystem.getEncoderValue() < 0.5) {
       return true;
     }
-    
+
     return false;
   }
 }
