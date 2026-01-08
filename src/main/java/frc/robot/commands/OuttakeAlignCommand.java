@@ -12,10 +12,12 @@ import frc.robot.subsystems.OuttakeSubsystem;
 public class OuttakeAlignCommand extends Command {
   /** Creates a new OuttakeAlignCommand. */
   OuttakeSubsystem m_outtakeSubsystem;
+
   double initialPose;
   boolean isComingDown = false;
   boolean isAtBottom = false;
   Timer m_timer;
+
   public OuttakeAlignCommand(OuttakeSubsystem outtakeSubsystem) {
     m_outtakeSubsystem = outtakeSubsystem;
     m_timer = new Timer();
@@ -32,22 +34,21 @@ public class OuttakeAlignCommand extends Command {
     isComingDown = false;
     isAtBottom = false;
     m_timer.reset();
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_outtakeSubsystem.getPos() > 1-.26){
+    if (m_outtakeSubsystem.getPos() > 1 - .26) {
       m_outtakeSubsystem.setMotorPower(-1.5);
       m_timer.start();
-      if(m_timer.get()< 0.1){
+      if (m_timer.get() < 0.1) {
         m_outtakeSubsystem.setMotorPower(0.1);
         m_timer.stop();
         isComingDown = true;
       }
     }
-    if(m_outtakeSubsystem.getPos() < 0.5-.26 && isComingDown){
+    if (m_outtakeSubsystem.getPos() < 0.5 - .26 && isComingDown) {
       m_outtakeSubsystem.setMotorPower(0.22);
       isAtBottom = true;
     }
@@ -55,13 +56,12 @@ public class OuttakeAlignCommand extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_outtakeSubsystem.getPos() < 0.1-.26 && isAtBottom){
+    if (m_outtakeSubsystem.getPos() < 0.1 - .26 && isAtBottom) {
       return true;
     }
     return false;

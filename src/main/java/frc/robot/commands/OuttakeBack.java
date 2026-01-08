@@ -11,6 +11,7 @@ import frc.robot.subsystems.OuttakeSubsystem;
 public class OuttakeBack extends Command {
   /** Creates a new OuttakeBack. */
   OuttakeSubsystem m_outtakeSubsystem;
+
   public OuttakeBack(OuttakeSubsystem outtakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_outtakeSubsystem = outtakeSubsystem;
@@ -36,7 +37,7 @@ public class OuttakeBack extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_outtakeSubsystem.getPos()<.7){
+    if (m_outtakeSubsystem.getPos() < .7) {
       return true;
     }
     return false;

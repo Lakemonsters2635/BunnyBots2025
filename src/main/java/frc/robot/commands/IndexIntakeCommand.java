@@ -6,13 +6,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.IndexSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class IndexIntakeCommand extends Command {
   private IndexSubsystem m_indexSubsystem;
-  
+
   /** Creates a new IndexIntakeCommand. */
   public IndexIntakeCommand(IndexSubsystem indexSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -39,8 +38,8 @@ public class IndexIntakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //-49.8 = 360 degrees
-    if(MathUtil.isNear(m_indexSubsystem.getTargetPos(), m_indexSubsystem.getPosition(), 10)){
+    // -49.8 = 360 degrees
+    if (MathUtil.isNear(m_indexSubsystem.getTargetPos(), m_indexSubsystem.getPosition(), 10)) {
       m_indexSubsystem.addToTargetPos(-90);
       return true;
     }

@@ -12,8 +12,9 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class IntakeCommand extends Command {
   /** Creates a new IntakeCommand. */
   private IntakeSubsystem m_intakeSubsystem;
+
   private ElevatorSubsystem m_elevatorSubsystem;
-  
+
   public IntakeCommand(IntakeSubsystem intakeSubsystem, ElevatorSubsystem elevatorSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_elevatorSubsystem = elevatorSubsystem;
@@ -25,7 +26,7 @@ public class IntakeCommand extends Command {
   @Override
   public void initialize() {
     // if(m_elevatorSubsystem.isAtGroundPosition()){
-      m_intakeSubsystem.intake();
+    m_intakeSubsystem.intake();
     // }
   }
 

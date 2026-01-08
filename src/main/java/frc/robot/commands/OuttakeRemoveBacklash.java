@@ -13,7 +13,9 @@ import frc.robot.subsystems.OuttakeSubsystem;
 public class OuttakeRemoveBacklash extends Command {
   /** Creates a new OuttakeRemoveBacklash. */
   OuttakeSubsystem m_os;
+
   Timer timer;
+
   public OuttakeRemoveBacklash(OuttakeSubsystem os) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_os = os;
@@ -23,7 +25,7 @@ public class OuttakeRemoveBacklash extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_os.setPID(0,0,0);
+    m_os.setPID(0, 0, 0);
     m_os.setVoltage(.2);
     timer.reset();
     timer.start();
@@ -31,8 +33,7 @@ public class OuttakeRemoveBacklash extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -45,7 +46,7 @@ public class OuttakeRemoveBacklash extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(timer.get() > .5){
+    if (timer.get() > .5) {
       return true;
     }
     return false;
