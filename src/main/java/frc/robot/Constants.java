@@ -1,6 +1,8 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 public class Constants {
   // SWERVE
@@ -84,13 +86,47 @@ public class Constants {
 
   // BUTTONS
   public static final int SHOOTER_BUTTON = 1; // TODO: set correct buttons
-
   // VISION AUTO COMMAND
   // TODO: VisionAutoData assumes only a single camera
   public static final int CAM_X_OFFSET = 0;
   public static final int CAM_Y_OFFSET = 0;
-  public static final int CAM_ANGLE_OFFSET =
-      0; // Rad // TODO: Code currently assumes the camera is facing forward
+  public static final int CAM_ANGLE_OFFSET = 0; // Rad // TODO: Code currently assumes the camera is facing forward
+  public static final Pose2d[] APRIL_TAG_POSITIONS = {
+    null,
+    new Pose2d(11.878056, 7.424674, new Rotation2d(Math.toRadians(180))), 
+    new Pose2d(11.915394, 4.638040, new Rotation2d(Math.toRadians(90))),
+    new Pose2d(11.311890, 4.390136, new Rotation2d(Math.toRadians(180))),
+    new Pose2d(11.311890, 4.034536, new Rotation2d(Math.toRadians(180))),
+    new Pose2d(11.915394, 3.431286, new Rotation2d(Math.toRadians(270))),
+    new Pose2d(11.878056, 0.644398, new Rotation2d(Math.toRadians(180))),
+    new Pose2d(11.952986, 0.644398, new Rotation2d(Math.toRadians(0))),
+    new Pose2d(12.270994, 3.431286, new Rotation2d(Math.toRadians(270))),
+    new Pose2d(4.021836, 3.678936, new Rotation2d(Math.toRadians(0))),
+    new Pose2d(12.519152, 4.034536, new Rotation2d(Math.toRadians(0))),
+    new Pose2d(12.270994, 4.638040, new Rotation2d(Math.toRadians(90))),
+    new Pose2d(11.952986, 7.424674, new Rotation2d(Math.toRadians(0))),
+    new Pose2d(16.533368, 7.403338, new Rotation2d(Math.toRadians(180))),
+    new Pose2d(16.533368, 6.971538, new Rotation2d(Math.toRadians(180))),
+    new Pose2d(16.532860, 4.323588, new Rotation2d(Math.toRadians(180))),
+    new Pose2d(16.532860, 3.891788, new Rotation2d(Math.toRadians(180))),
+    new Pose2d(4.663186, 0.644398, new Rotation2d(Math.toRadians(0))),
+    new Pose2d(4.625594, 3.431286, new Rotation2d(Math.toRadians(270))),
+    new Pose2d(5.229098, 3.678936, new Rotation2d(Math.toRadians(0))),
+    new Pose2d(5.229098, 4.034536, new Rotation2d(Math.toRadians(0))),
+    new Pose2d(4.625594, 4.638040, new Rotation2d(Math.toRadians(90))),
+    new Pose2d(4.663186, 7.424674, new Rotation2d(Math.toRadians(0))),
+    new Pose2d(4.588256, 7.424674, new Rotation2d(Math.toRadians(180))),
+    new Pose2d(4.269994, 4.638040, new Rotation2d(Math.toRadians(90))),
+    new Pose2d(4.021836, 4.390136, new Rotation2d(Math.toRadians(180))),
+    new Pose2d(4.021836, 4.034536, new Rotation2d(Math.toRadians(180))),
+    new Pose2d(4.269994, 3.431286, new Rotation2d(Math.toRadians(270))),
+    new Pose2d(4.588256, 0.644398, new Rotation2d(Math.toRadians(180))),
+    new Pose2d(0.007620, 0.665988, new Rotation2d(Math.toRadians(0))),
+    new Pose2d(0.007620, 1.097788, new Rotation2d(Math.toRadians(0))),
+    new Pose2d(0.008128, 3.745738, new Rotation2d(Math.toRadians(0))),
+    new Pose2d(0.008128, 4.177538, new Rotation2d(Math.toRadians(0)))
+  };
+  
 
   // OBJECT TRACKER SUBSYSTEM
   public static final double CAMERA_TILT = 37; // previous was 35

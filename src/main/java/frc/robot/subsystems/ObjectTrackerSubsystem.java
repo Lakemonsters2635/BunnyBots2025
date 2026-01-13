@@ -274,6 +274,18 @@ public class ObjectTrackerSubsystem extends SubsystemBase {
     return null;
   }
 
+  public Detection[] getAllAprilTagDetections(int[] tagIds) {
+    Detection[] detections = new Detection[tagIds.length];
+    for (int i = 0; i < tagIds.length; i++) {
+      try {
+        detections[i] = getSpecificAprilTag(tagIds[i]);
+      } catch (Exception e) {
+        detections[i] = null;
+      }
+    }
+    return detections;
+  }
+
   // public Detection getNearestAprilTagDetection(int[] tagIds){
   //     Detection[] detections = getAprilTagDetections(tagIds);
   //     double minimum = Integer.MAX_VALUE;

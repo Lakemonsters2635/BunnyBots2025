@@ -96,7 +96,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       new AHRS(AHRS.NavXComType.kMXP_SPI, 200); // new AHRS(SPI.Port.kMXP, (byte) 200);  //Nav X
   private double m_cacheAngle = 180; // TODO
 
-  private final SwerveDriveKinematics m_kinematics =
+  public final SwerveDriveKinematics m_kinematics =
       new SwerveDriveKinematics(
           m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
@@ -132,6 +132,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_frontLeft.stop();
     m_backRight.stop();
     m_frontRight.stop();
+  }
+
+  public Rotation2d getGyroAngle(){
+    return new Rotation2d(Math.toRadians(m_gyro.getAngle())); //TODO: if m_gyro.getAngle degrees remove the conversion
   }
 
   public void stashAngle() {
@@ -497,6 +501,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
           m_backLeft.getPosition(),
           m_backRight.getPosition()
         });
+  }
+  public SwerveModulePosition[]getSwerveModulePositions(){
+    return new SwerveModulePosition[] {
+      m_frontLeft.getPosition(),
+      m_frontRight.getPosition(),
+      m_backLeft.getPosition(),
+      m_backRight.getPosition()
+    };
   }
 
   /** Get pose from odometry field * */
