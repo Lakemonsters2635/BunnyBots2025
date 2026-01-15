@@ -128,7 +128,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
             m_backLeft.getPosition(),
             m_backRight.getPosition()
           },
-          new Pose2d(0, 0, new Rotation2d(0)));
+          new Pose2d(-m_drivetrainWheelbaseWidth/2, -m_drivetrainWheelbaseLength/2, new Rotation2d(0)));
 
   /** Creates a new DrivetrianSubsystem. */
   public DrivetrainSubsystem() {

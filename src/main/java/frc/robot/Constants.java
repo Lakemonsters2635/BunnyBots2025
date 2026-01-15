@@ -94,6 +94,26 @@ public class Constants {
       0; // Rad // TODO: Code currently assumes the camera is facing forward
   public static final Pose2d[] APRIL_TAG_POSITIONS = {
     null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    new Pose2d(2.417, 2.988, new Rotation2d(Math.toRadians(270))),
+    null,
+    null,
+    null,
+    null,
+    new Pose2d(3.125, 0, new Rotation2d(Math.toRadians(180)))
+
+  };
+  //This is the real april tag postition
+  /* 
+  public static final Pose2d[] APRIL_TAG_POSITIONS = {
+    null,
     new Pose2d(11.878056, 7.424674, new Rotation2d(Math.toRadians(180))),
     new Pose2d(11.915394, 4.638040, new Rotation2d(Math.toRadians(90))),
     new Pose2d(11.311890, 4.390136, new Rotation2d(Math.toRadians(180))),
@@ -127,7 +147,7 @@ public class Constants {
     new Pose2d(0.008128, 3.745738, new Rotation2d(Math.toRadians(0))),
     new Pose2d(0.008128, 4.177538, new Rotation2d(Math.toRadians(0)))
   };
-
+  */
   // OBJECT TRACKER SUBSYSTEM
   public static final double CAMERA_TILT = 37; // previous was 35
   public static final double[] CAMERA_OFFSET = {3, 13}; // offset = [x, y], In inches
