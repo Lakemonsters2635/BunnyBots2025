@@ -8,17 +8,14 @@ import com.studica.frc.AHRS;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -34,8 +31,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-
-import java.security.Timestamp;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -122,18 +117,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
   //           m_backLeft.getPosition(),
   //           m_backRight.getPosition()
   //         });
-  
-  public final SwerveDrivePoseEstimator m_odometry = 
+
+  public final SwerveDrivePoseEstimator m_odometry =
       new SwerveDrivePoseEstimator(
-        m_kinematics,
-        m_gyro.getRotation2d(),
-        new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_backLeft.getPosition(),
-          m_backRight.getPosition()
-        },
-        new Pose2d(0,0,new Rotation2d(0)));
+          m_kinematics,
+          m_gyro.getRotation2d(),
+          new SwerveModulePosition[] {
+            m_frontLeft.getPosition(),
+            m_frontRight.getPosition(),
+            m_backLeft.getPosition(),
+            m_backRight.getPosition()
+          },
+          new Pose2d(0, 0, new Rotation2d(0)));
 
   /** Creates a new DrivetrianSubsystem. */
   public DrivetrainSubsystem() {
@@ -152,8 +147,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_frontRight.stop();
   }
 
-  public Rotation2d getGyroAngle(){
-    return new Rotation2d(Math.toRadians(m_gyro.getAngle())); //TODO: if m_gyro.getAngle degrees remove the conversion
+  public Rotation2d getGyroAngle() {
+    return new Rotation2d(
+        Math.toRadians(
+            m_gyro.getAngle())); // TODO: if m_gyro.getAngle degrees remove the conversion
   }
 
   public void stashAngle() {
@@ -521,7 +518,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
           m_backRight.getPosition()
         });
   }
-  public SwerveModulePosition[]getSwerveModulePositions(){
+
+  public SwerveModulePosition[] getSwerveModulePositions() {
     return new SwerveModulePosition[] {
       m_frontLeft.getPosition(),
       m_frontRight.getPosition(),

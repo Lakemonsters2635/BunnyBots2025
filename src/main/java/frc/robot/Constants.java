@@ -1,8 +1,8 @@
 package frc.robot;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 
 public class Constants {
   // SWERVE
@@ -90,10 +90,11 @@ public class Constants {
   // TODO: VisionAutoData assumes only a single camera
   public static final int CAM_X_OFFSET = 0;
   public static final int CAM_Y_OFFSET = 0;
-  public static final int CAM_ANGLE_OFFSET = 0; // Rad // TODO: Code currently assumes the camera is facing forward
+  public static final int CAM_ANGLE_OFFSET =
+      0; // Rad // TODO: Code currently assumes the camera is facing forward
   public static final Pose2d[] APRIL_TAG_POSITIONS = {
     null,
-    new Pose2d(11.878056, 7.424674, new Rotation2d(Math.toRadians(180))), 
+    new Pose2d(11.878056, 7.424674, new Rotation2d(Math.toRadians(180))),
     new Pose2d(11.915394, 4.638040, new Rotation2d(Math.toRadians(90))),
     new Pose2d(11.311890, 4.390136, new Rotation2d(Math.toRadians(180))),
     new Pose2d(11.311890, 4.034536, new Rotation2d(Math.toRadians(180))),
@@ -126,7 +127,6 @@ public class Constants {
     new Pose2d(0.008128, 3.745738, new Rotation2d(Math.toRadians(0))),
     new Pose2d(0.008128, 4.177538, new Rotation2d(Math.toRadians(0)))
   };
-  
 
   // OBJECT TRACKER SUBSYSTEM
   public static final double CAMERA_TILT = 37; // previous was 35
