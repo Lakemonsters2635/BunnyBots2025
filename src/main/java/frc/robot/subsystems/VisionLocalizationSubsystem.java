@@ -83,6 +83,9 @@ public class VisionLocalizationSubsystem extends SubsystemBase {
 
   public Pose2d visionToFieldPose(Transform2d visionPose, int tagID) {
     Pose2d tagPose = Constants.APRIL_TAG_POSITIONS[tagID];
+    if (tagPose == null || visionPose == null) {
+      return null;
+    }
     Pose2d feildPose = tagPose.transformBy(visionPose);
     return feildPose;
   }
@@ -96,12 +99,17 @@ public class VisionLocalizationSubsystem extends SubsystemBase {
         if (!hasIntializedPose) {
           initialPose = visionToFieldPose(visionAutoData(0, 0, 0, 1), i);
         }
-        m_dts.m_odometry.addVisionMeasurement(
+        try {
+          m_dts.m_odometry.addVisionMeasurement(
             visionToFieldPose(visionAutoData(0, 0, 0, i), i), Timer.getFPGATimestamp());
+        } catch (Exception e) {
+          System.out.println("Failed to add vision measurement for tag " + i);
+        }
+        
       }
     }
-    m_dts.m_odometry.updateWithTime(
-        Timer.getFPGATimestamp(), m_dts.getGyroAngle(), m_dts.getSwerveModulePositions());
+    // m_dts.m_odometry.updateWithTime(
+    //     Timer.getFPGATimestamp(), m_dts.getGyroAngle(), m_dts.getSwerveModulePositions());
 
     // Need x, z, ya from each
   }

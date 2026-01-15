@@ -30,6 +30,7 @@ import frc.robot.subsystems.IndexSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ObjectTrackerSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
+import frc.robot.subsystems.VisionLocalizationSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -47,15 +48,18 @@ public class RobotContainer {
 
   public static OuttakeSubsystem m_outtakeSubsystem = new OuttakeSubsystem();
 
+  
   // public static OuttakeCommand m_outtakeCommand = new OuttakeCommand(m_outtakeSubsystem);
   // public static OuttakeBack m_outtakeBack = new OuttakeBack(m_outtakeSubsystem);
   public static IndexSubsystem m_indexSubsystem = new IndexSubsystem();
-
+  
   public static IndexIntakeCommand m_indexIntakeCommand = new IndexIntakeCommand(m_indexSubsystem);
   public static ObjectTrackerSubsystem m_objectTrackerSubsystem =
-      new ObjectTrackerSubsystem("Eclipse");
+  new ObjectTrackerSubsystem("Eclipse");
   public static ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
   public static IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  public static VisionLocalizationSubsystem m_visionLocalizationSubsystem =
+      new VisionLocalizationSubsystem(m_objectTrackerSubsystem, m_drivetrainSubsystem);
 
   // COMMANDS
   // public static VisionAutoCommand m_visionAutoCommand = new

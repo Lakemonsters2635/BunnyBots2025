@@ -63,7 +63,7 @@ public class ObjectTrackerSubsystem extends SubsystemBase {
   public double visionY;
   public double visionYa;
 
-  private final double CAMERA_PITCH_FRONT = 23; // should be 23
+  private final double CAMERA_PITCH_FRONT = 0; // should be 23
   private final double CAMERA_PITCH_BACK = 0;
   private double m_cameraPitch;
 
