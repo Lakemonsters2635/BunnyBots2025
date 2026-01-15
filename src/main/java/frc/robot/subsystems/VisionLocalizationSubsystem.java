@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.PoseEstimator;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -27,11 +28,9 @@ import edu.wpi.first.math.numbers.N1;
 
 public class VisionLocalizationSubsystem extends SubsystemBase {
   /** Creates a new VisionLocalizationSubsystem. */
-  private PoseEstimator<SwerveModulePosition[]> m_poseEstimator;
   Matrix <N3, N1> odometryStd =  VecBuilder.fill(0.002, 0.002, 0.0035); //These are placeholder numbers calibrate later: x, y, z
   Matrix <N3, N1> visionStd =  VecBuilder.fill(0.002, 0.002, 0.007); //N3 and N1 matrix dimensions
   SwerveDriveKinematics m_kinematics;
-  SwerveDriveOdometry m_odometry;
   private Detection[] tags;
   private ObjectTrackerSubsystem m_ots;
   private DrivetrainSubsystem m_dts;
@@ -42,8 +41,7 @@ public class VisionLocalizationSubsystem extends SubsystemBase {
     m_ots = ots;
     m_dts = dts;
     this.m_kinematics = m_dts.m_kinematics;
-    this.m_odometry = m_dts.m_odometry;
-    m_poseEstimator = new PoseEstimator<SwerveModulePosition[]>(m_kinematics, m_odometry , odometryStd, visionStd);     
+       
  
 
     tagIds = new int[Constants.APRIL_TAG_POSITIONS.length-1];
@@ -111,10 +109,10 @@ public class VisionLocalizationSubsystem extends SubsystemBase {
           initialPose = visionToFieldPose(visionAutoData(0, 0, 0, 1), i);
           
         }
-        m_poseEstimator.addVisionMeasurement(visionToFieldPose(visionAutoData(0, 0, 0, i), i), Timer.getFPGATimestamp());
+        m_dts.m_odometry.addVisionMeasurement(visionToFieldPose(visionAutoData(0, 0, 0, i), i), Timer.getFPGATimestamp());
       }
     }
-    m_poseEstimator.updateWithTime(Timer.getFPGATimestamp(),m_dts.getGyroAngle(), m_dts.getSwerveModulePositions());
+    m_dts.m_odometry.updateWithTime(Timer.getFPGATimestamp(),m_dts.getGyroAngle(), m_dts.getSwerveModulePositions());
 
 
 
