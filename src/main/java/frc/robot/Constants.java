@@ -108,10 +108,9 @@ public class Constants {
     null,
     null,
     new Pose2d(3.125, 0, new Rotation2d(Math.toRadians(180)))
-
   };
-  //This is the real april tag postition
-  /* 
+  // This is the real april tag postition
+  /*
   public static final Pose2d[] APRIL_TAG_POSITIONS = {
     null,
     new Pose2d(11.878056, 7.424674, new Rotation2d(Math.toRadians(180))),

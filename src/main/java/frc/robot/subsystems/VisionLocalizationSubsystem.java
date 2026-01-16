@@ -97,17 +97,24 @@ public class VisionLocalizationSubsystem extends SubsystemBase {
     for (int i = 1; i < tags.length; i++) {
       if (tags[i] != null) {
         if (!hasIntializedPose) {
-          initialPose = visionToFieldPose(visionAutoData(0, 0, 0, 1), i);
+          initialPose = visionToFieldPose(visionAutoData(0, 0, 0, i), i);
+
+          // Why did we had a constant 1 for aprilTag id here?
+          // So I commented it out, it might be the reason why nothing worked
+          // initialPose = visionToFieldPose(visionAutoData(0, 0, 0, 1), i);
         }
         try {
           m_dts.m_odometry.addVisionMeasurement(
-            visionToFieldPose(visionAutoData(0, 0, 0, i), i), Timer.getFPGATimestamp());
+              visionToFieldPose(visionAutoData(0, 0, 0, i), i), Timer.getFPGATimestamp());
         } catch (Exception e) {
           System.out.println("Failed to add vision measurement for tag " + i);
         }
-        
+
+      } else {
+        System.out.println("No detection for tag " + i);
       }
     }
+    // This is done in DrivetrainSubsystem now, so commented out
     // m_dts.m_odometry.updateWithTime(
     //     Timer.getFPGATimestamp(), m_dts.getGyroAngle(), m_dts.getSwerveModulePositions());
 
