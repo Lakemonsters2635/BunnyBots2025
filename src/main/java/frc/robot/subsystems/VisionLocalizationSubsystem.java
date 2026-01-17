@@ -96,16 +96,17 @@ public class VisionLocalizationSubsystem extends SubsystemBase {
     tags = m_ots.getAllAprilTagDetections(tagIds);
     for (int i = 1; i < tags.length; i++) {
       if (tags[i] != null) {
-        if (!hasIntializedPose) {
-          initialPose = visionToFieldPose(visionAutoData(0, 0, 0, i), i);
+        // if (!hasIntializedPose) {
+        //   initialPose = visionToFieldPose(visionAutoData(0, 0, 0, i), i);
 
           // Why did we had a constant 1 for aprilTag id here?
           // So I commented it out, it might be the reason why nothing worked
           // initialPose = visionToFieldPose(visionAutoData(0, 0, 0, 1), i);
-        }
+        // }
         try {
           m_dts.m_odometry.addVisionMeasurement(
               visionToFieldPose(visionAutoData(0, 0, 0, i), i), Timer.getFPGATimestamp());
+          System.out.println("Successfully add vision meas tag for " + i + "SUCESSS");
         } catch (Exception e) {
           System.out.println("Failed to add vision measurement for tag " + i);
         }
