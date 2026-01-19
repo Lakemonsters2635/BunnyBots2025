@@ -99,9 +99,9 @@ public class VisionLocalizationSubsystem extends SubsystemBase {
         // if (!hasIntializedPose) {
         //   initialPose = visionToFieldPose(visionAutoData(0, 0, 0, i), i);
 
-          // Why did we had a constant 1 for aprilTag id here?
-          // So I commented it out, it might be the reason why nothing worked
-          // initialPose = visionToFieldPose(visionAutoData(0, 0, 0, 1), i);
+        // Why did we had a constant 1 for aprilTag id here?
+        // So I commented it out, it might be the reason why nothing worked
+        // initialPose = visionToFieldPose(visionAutoData(0, 0, 0, 1), i);
         // }
         try {
           m_dts.m_odometry.addVisionMeasurement(

@@ -13,35 +13,17 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.IndexSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ObjectTrackerSubsystem;
-import frc.robot.subsystems.OuttakeSubsystem;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
   DrivetrainSubsystem m_dts;
 
-  OuttakeSubsystem m_outtakeSubsystem;
-  IndexSubsystem m_indexSubsystem;
-  ElevatorSubsystem m_elevatorSubsystem;
   ObjectTrackerSubsystem m_objectTrackerSubsystem;
-  IntakeSubsystem m_intakeSubsystem;
 
-  public Autos(
-      DrivetrainSubsystem dts,
-      OuttakeSubsystem outtakeSubsystem,
-      IndexSubsystem indexSubsystem,
-      ElevatorSubsystem elevatorSubsystem,
-      ObjectTrackerSubsystem objectTrackerSubsystem,
-      IntakeSubsystem intakeSubsystem) {
+  public Autos(DrivetrainSubsystem dts, ObjectTrackerSubsystem objectTrackerSubsystem) {
     m_dts = dts;
-    m_outtakeSubsystem = outtakeSubsystem;
-    m_indexSubsystem = indexSubsystem;
-    m_elevatorSubsystem = elevatorSubsystem;
     m_objectTrackerSubsystem = objectTrackerSubsystem;
-    m_intakeSubsystem = intakeSubsystem;
   }
 
   public Command goStraight() {
@@ -60,13 +42,7 @@ public final class Autos {
 
   public Command straightScoreAuto() {
     return new SequentialCommandGroup(
-        new VisionAutoCommand(m_dts, m_objectTrackerSubsystem, 10, 6, -58.5, 0, -90, true),
-        new WaitCommand(0.3),
-        new ShooterCommand(m_outtakeSubsystem),
-        new WaitCommand(1.5),
-        new IndexIntakeCommand(m_indexSubsystem),
-        new WaitCommand(1),
-        new ShooterCommand(m_outtakeSubsystem));
+        new VisionAutoCommand(m_dts, m_objectTrackerSubsystem, 10, 6, -58.5, 0, -90, true));
   }
 
   public Command leftScoreAuto() {
@@ -74,13 +50,7 @@ public final class Autos {
         new PidAutoCommand(
             m_dts, m_objectTrackerSubsystem, 0, -Units.inchesToMeters(148.375 - 11 - 12), 0),
         new WaitCommand(0.3),
-        new VisionAutoCommand(m_dts, m_objectTrackerSubsystem, 2, 6, -58.5 + 2, 0, -90, true),
-        new WaitCommand(.5),
-        new ShooterCommand(m_outtakeSubsystem),
-        new WaitCommand(1.5),
-        new IndexIntakeCommand(m_indexSubsystem),
-        new WaitCommand(1),
-        new ShooterCommand(m_outtakeSubsystem));
+        new VisionAutoCommand(m_dts, m_objectTrackerSubsystem, 2, 6, -58.5 + 2, 0, -90, true));
   }
 
   public Command rightScoreAuto() {
@@ -88,12 +58,6 @@ public final class Autos {
         new PidAutoCommand(
             m_dts, m_objectTrackerSubsystem, 0, Units.inchesToMeters(148.375 - 11 - 12), 0),
         new WaitCommand(0.3),
-        new VisionAutoCommand(m_dts, m_objectTrackerSubsystem, 5, 6, -58.5 + 2, 0, -90, true),
-        new WaitCommand(.5),
-        new ShooterCommand(m_outtakeSubsystem),
-        new WaitCommand(1.5),
-        new IndexIntakeCommand(m_indexSubsystem),
-        new WaitCommand(1),
-        new ShooterCommand(m_outtakeSubsystem, true));
+        new VisionAutoCommand(m_dts, m_objectTrackerSubsystem, 5, 6, -58.5 + 2, 0, -90, true));
   }
 }
