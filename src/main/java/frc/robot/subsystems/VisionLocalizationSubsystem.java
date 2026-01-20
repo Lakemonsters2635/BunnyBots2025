@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -27,7 +28,7 @@ public class VisionLocalizationSubsystem extends SubsystemBase {
 
   Matrix<N3, N1> visionStd = VecBuilder.fill(0.002, 0.002, 0.007); // N3 and N1 matrix dimensions
   SwerveDriveKinematics m_kinematics;
-  private Detection[] tags;
+  private Detection[] detections;
   private ObjectTrackerSubsystem m_ots;
   private DrivetrainSubsystem m_dts;
   private int[] tagIds;
@@ -93,9 +94,10 @@ public class VisionLocalizationSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    tags = m_ots.getAllAprilTagDetections(tagIds);
-    for (int i = 1; i < tags.length; i++) {
-      if (tags[i] != null) {
+    detections = m_ots.getAllAprilTagDetections(tagIds);
+    for (int i = 0; i < detections.length; i++) {
+      if (detections[i] != null) {
+        int tagId = Integer.parseInt(detections[i].objectLabel.substring(10));
         // if (!hasIntializedPose) {
         //   initialPose = visionToFieldPose(visionAutoData(0, 0, 0, i), i);
 
@@ -105,20 +107,28 @@ public class VisionLocalizationSubsystem extends SubsystemBase {
         // }
         try {
           m_dts.m_odometry.addVisionMeasurement(
-              visionToFieldPose(visionAutoData(0, 0, 0, i), i), Timer.getFPGATimestamp());
-          System.out.println("Successfully add vision meas tag for " + i + "SUCESSS");
+              visionToFieldPose(visionAutoData(0, 0, 0, tagId), tagId), Timer.getFPGATimestamp());
+              SmartDashboard.putNumber("visionAutoDataX", visionAutoData(0, 0, 0, tagId).getX());
+              SmartDashboard.putNumber("visionAutoDataY", visionAutoData(0, 0, 0, tagId).getY());
+            // System.out.println("Successfully add vision meas tag for " + tagId + "SUCESSS");
         } catch (Exception e) {
-          System.out.println("Failed to add vision measurement for tag " + i);
+        //  System.out.println("Failed to add vision measurement for tag " + tagId);
         }
 
       } else {
-        System.out.println("No detection for tag " + i);
+        // System.out.println("No detection for tag " + i);
       }
     }
     // This is done in DrivetrainSubsystem now, so commented out
     // m_dts.m_odometry.updateWithTime(
     //     Timer.getFPGATimestamp(), m_dts.getGyroAngle(), m_dts.getSwerveModulePositions());
-
+      m_dts.m_odometry.updateWithTime(Timer.getFPGATimestamp(), m_dts.getGyroAngle(),
+      new SwerveModulePosition[]{
+        new SwerveModulePosition(0, new Rotation2d(0)),
+        new SwerveModulePosition(0, new Rotation2d(0)),
+        new SwerveModulePosition(0, new Rotation2d(0)),
+        new SwerveModulePosition(0, new Rotation2d(0)),
+      });
     // Need x, z, ya from each
   }
 }

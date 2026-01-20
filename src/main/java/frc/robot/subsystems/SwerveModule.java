@@ -49,6 +49,7 @@ public class SwerveModule {
    *     module's zero position.
    * @param driveMotorGain Gain to apply to the drive motor output for tuning.
    */
+  @SuppressWarnings("removal")
   public SwerveModule(
       int driveMotorChannel,
       int turningMotorChannel,
