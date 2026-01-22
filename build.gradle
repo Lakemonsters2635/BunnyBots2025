@@ -154,3 +154,7 @@ spotless {
         endWithNewline()
     }
 }
+
+tasks.named("build"){
+    dependsOn("spotlessApply")
+}

@@ -67,8 +67,10 @@ public class RobotContainer {
     // InstantCommand(()->m_outtakeSubsystem.setAngle(Constants.SHOOTER_TARGET_DELTA_ANGLE)));
 
     // RIGHT JOYSTICK BUTTONS
+    Trigger goToAprilTagNine = new JoystickButton(rightJoystick, 1);
     Trigger resetSwerveButton = new JoystickButton(rightJoystick, 9);
 
+   goToAprilTagNine.onTrue(m_drivetrainSubsystem.goToAprilTag(9));
     resetSwerveButton.onTrue(
         new SequentialCommandGroup(
             new InstantCommand(() -> m_drivetrainSubsystem.resetAngle()),

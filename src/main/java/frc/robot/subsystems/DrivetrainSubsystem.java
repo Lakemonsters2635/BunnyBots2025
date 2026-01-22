@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.studica.frc.AHRS;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -11,6 +12,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -33,6 +35,12 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import java.util.List;
 import java.util.function.Supplier;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 
 public class DrivetrainSubsystem extends SubsystemBase {
   public static final double kMaxSpeed =
@@ -40,7 +48,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public final double kMaxAngularSpeed =
       Math.PI; // 1/2 rotation per second   Max Speed for Rotation
   private SwerveModuleState[] swerveModuleStates;
-
+  VisionLocalizationSubsystem m_vls = RobotContainer.m_visionLocalizationSubsystem;
   public static Joystick rightJoystick = RobotContainer.rightJoystick;
   public static Joystick leftJoystick = RobotContainer.leftJoystick;
 
@@ -132,6 +140,39 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   /** Creates a new DrivetrianSubsystem. */
   public DrivetrainSubsystem() {
+    m_odometry.setVisionMeasurementStdDevs(Constants.VISION_STD);
+    RobotConfig config = null;
+    try{
+      config = RobotConfig.fromGUISettings();
+    } catch (Exception e) {
+      // Handle exception as needed
+      e.printStackTrace();
+    }    
+    AutoBuilder.configure(
+            // this::getPosePathPlanner, // Robot pose supplier
+            this::getPose,
+            this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            (speeds, feedforwards) -> setDesiredStates(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+            ),
+            config, // Default path replanning config. See the API for the options here
+            () -> {
+                // Boolean supplier that controls when the path will be mirrored for the red alliance
+                // This will flip the path being followed to the red side of the field.
+                // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+                return false;
+                // var alliance = DriverStation.getAlliance();
+                // if (alliance.isPresent()) {
+                //   return alliance.get() == DriverStation.Alliance.Red;
+                // }
+                // return false;
+            },
+            this // Reference to this subsystem to set requirements
+  );
+
     getPose();
 
     // resetAngle() should be called before zeroOdometry() because reseting odometry uses gyro
@@ -313,6 +354,37 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     return swerveControllerCommand;
   }
+  
+    public Command goToAprilTag(int id) {
+      // Pose2d currentPose = new Pose2d(
+      //     getPose().getX(),
+      //     getPose().getY(),
+      //     new Rotation2d (getPose().getRotation().getRadians())
+      // );
+
+      Pose2d tagPose = Constants.APRIL_TAG_POSITIONS[id];
+      Transform2d offset = new Transform2d(
+       0.0,        // X offset (left/right of tag)
+       -13,    // Y offset (forward/back from tag)
+      Rotation2d.kZero
+        );
+
+      Pose2d targetPose = tagPose.transformBy(offset);
+
+      PathConstraints constraints = new PathConstraints(
+        3.0,   // max velocity (m/s)
+        3.0,   // max acceleration (m/s^2)
+        2 * Math.PI, // max angular velocity (rad/s)
+        2 * Math.PI  // max angular acceleration (rad/s^2)
+    );
+
+    return AutoBuilder.pathfindToPose(
+        targetPose,
+        constraints
+    );
+     
+  }
+
 
   public void resetAngle() {
     // Setting the angle adjustment changes where forward is when you push the controls forward

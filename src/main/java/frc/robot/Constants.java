@@ -1,7 +1,11 @@
 package frc.robot;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 public class Constants {
@@ -111,48 +115,50 @@ public class Constants {
   // };
   // This is the real april tag postition
 
- public static final Pose2d[] APRIL_TAG_POSITIONS = {
-    null, // index 0 unused
+  public static final Matrix<N3, N1> ODOMETRY_STD =
+      VecBuilder.fill(
+          0.002, 0.002, 0.0035); // These are placeholder numbers calibrate later: x, y, z
 
+  public static final Matrix<N3, N1> VISION_STD = VecBuilder.fill(0.002, 0.002, 0.007); // N3 and N1 matrix dimensions
+
+  public static final Pose2d[] APRIL_TAG_POSITIONS = {
+    null, // index 0 unused
     new Pose2d(467.64 * 0.0254, 292.31 * 0.0254, Rotation2d.fromDegrees(180)), // 1
-    new Pose2d(469.11 * 0.0254, 182.60 * 0.0254, Rotation2d.fromDegrees(90)),  // 2
+    new Pose2d(469.11 * 0.0254, 182.60 * 0.0254, Rotation2d.fromDegrees(90)), // 2
     new Pose2d(445.35 * 0.0254, 172.84 * 0.0254, Rotation2d.fromDegrees(180)), // 3
     new Pose2d(445.35 * 0.0254, 158.84 * 0.0254, Rotation2d.fromDegrees(180)), // 4
     new Pose2d(469.11 * 0.0254, 135.09 * 0.0254, Rotation2d.fromDegrees(270)), // 5
-    new Pose2d(467.64 * 0.0254, 25.37  * 0.0254, Rotation2d.fromDegrees(180)), // 6
-    new Pose2d(470.59 * 0.0254, 25.37  * 0.0254, Rotation2d.fromDegrees(0)),   // 7
+    new Pose2d(467.64 * 0.0254, 25.37 * 0.0254, Rotation2d.fromDegrees(180)), // 6
+    new Pose2d(470.59 * 0.0254, 25.37 * 0.0254, Rotation2d.fromDegrees(0)), // 7
     new Pose2d(483.11 * 0.0254, 135.09 * 0.0254, Rotation2d.fromDegrees(270)), // 8
-    new Pose2d(492.88 * 0.0254, 144.84 * 0.0254, Rotation2d.fromDegrees(0)),   // 9
-    new Pose2d(492.88 * 0.0254, 158.84 * 0.0254, Rotation2d.fromDegrees(0)),   // 10
-    new Pose2d(483.11 * 0.0254, 182.60 * 0.0254, Rotation2d.fromDegrees(90)),  // 11
-    new Pose2d(470.59 * 0.0254, 292.31 * 0.0254, Rotation2d.fromDegrees(0)),   // 12
-
+    new Pose2d(492.88 * 0.0254, 144.84 * 0.0254, Rotation2d.fromDegrees(0)), // 9
+    new Pose2d(492.88 * 0.0254, 158.84 * 0.0254, Rotation2d.fromDegrees(0)), // 10
+    new Pose2d(483.11 * 0.0254, 182.60 * 0.0254, Rotation2d.fromDegrees(90)), // 11
+    new Pose2d(470.59 * 0.0254, 292.31 * 0.0254, Rotation2d.fromDegrees(0)), // 12
     new Pose2d(650.92 * 0.0254, 291.47 * 0.0254, Rotation2d.fromDegrees(180)), // 13
     new Pose2d(650.92 * 0.0254, 274.47 * 0.0254, Rotation2d.fromDegrees(180)), // 14
     new Pose2d(650.90 * 0.0254, 170.22 * 0.0254, Rotation2d.fromDegrees(180)), // 15
     new Pose2d(650.90 * 0.0254, 153.22 * 0.0254, Rotation2d.fromDegrees(180)), // 16
-
-    new Pose2d(183.59 * 0.0254, 25.37  * 0.0254, Rotation2d.fromDegrees(0)),   // 17
+    new Pose2d(183.59 * 0.0254, 25.37 * 0.0254, Rotation2d.fromDegrees(0)), // 17
     new Pose2d(182.11 * 0.0254, 135.09 * 0.0254, Rotation2d.fromDegrees(270)), // 18
-    new Pose2d(205.87 * 0.0254, 144.84 * 0.0254, Rotation2d.fromDegrees(0)),   // 19
-    new Pose2d(205.87 * 0.0254, 158.84 * 0.0254, Rotation2d.fromDegrees(0)),   // 20
-    new Pose2d(182.11 * 0.0254, 182.60 * 0.0254, Rotation2d.fromDegrees(90)),  // 21
-    new Pose2d(183.59 * 0.0254, 292.31 * 0.0254, Rotation2d.fromDegrees(0)),   // 22
+    new Pose2d(205.87 * 0.0254, 144.84 * 0.0254, Rotation2d.fromDegrees(0)), // 19
+    new Pose2d(205.87 * 0.0254, 158.84 * 0.0254, Rotation2d.fromDegrees(0)), // 20
+    new Pose2d(182.11 * 0.0254, 182.60 * 0.0254, Rotation2d.fromDegrees(90)), // 21
+    new Pose2d(183.59 * 0.0254, 292.31 * 0.0254, Rotation2d.fromDegrees(0)), // 22
     new Pose2d(180.64 * 0.0254, 292.31 * 0.0254, Rotation2d.fromDegrees(180)), // 23
-    new Pose2d(168.11 * 0.0254, 182.60 * 0.0254, Rotation2d.fromDegrees(90)),  // 24
+    new Pose2d(168.11 * 0.0254, 182.60 * 0.0254, Rotation2d.fromDegrees(90)), // 24
     new Pose2d(158.34 * 0.0254, 172.84 * 0.0254, Rotation2d.fromDegrees(180)), // 25
     new Pose2d(158.34 * 0.0254, 158.84 * 0.0254, Rotation2d.fromDegrees(180)), // 26
     new Pose2d(168.11 * 0.0254, 135.09 * 0.0254, Rotation2d.fromDegrees(270)), // 27
-    new Pose2d(180.64 * 0.0254, 25.37  * 0.0254, Rotation2d.fromDegrees(180)), // 28
-
-    new Pose2d(0.30  * 0.0254, 26.22  * 0.0254, Rotation2d.fromDegrees(0)),    // 29
-    new Pose2d(0.30  * 0.0254, 43.22  * 0.0254, Rotation2d.fromDegrees(0)),    // 30
-    new Pose2d(0.32  * 0.0254, 147.47 * 0.0254, Rotation2d.fromDegrees(0)),    // 31
-    new Pose2d(0.32  * 0.0254, 164.47 * 0.0254, Rotation2d.fromDegrees(0))     // 32
-};
+    new Pose2d(180.64 * 0.0254, 25.37 * 0.0254, Rotation2d.fromDegrees(180)), // 28
+    new Pose2d(0.30 * 0.0254, 26.22 * 0.0254, Rotation2d.fromDegrees(0)), // 29
+    new Pose2d(0.30 * 0.0254, 43.22 * 0.0254, Rotation2d.fromDegrees(0)), // 30
+    new Pose2d(0.32 * 0.0254, 147.47 * 0.0254, Rotation2d.fromDegrees(0)), // 31
+    new Pose2d(0.32 * 0.0254, 164.47 * 0.0254, Rotation2d.fromDegrees(0)) // 32
+  };
 
   // OBJECT TRACKER SUBSYSTEM
-  public static final double CAMERA_TILT = 33; // previous was 37, 33 is for testing post bunnybots
+  public static final double CAMERA_TILT = 30; // previous was 37, 30 is for testing post bunnybots
   public static final double[] CAMERA_OFFSET = {3, 13}; // offset = [x, y], In inches
 
   // INTAKE CONSTANTS
