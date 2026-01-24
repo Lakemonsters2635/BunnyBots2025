@@ -4,16 +4,11 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,8 +17,8 @@ import frc.robot.Constants;
 
 public class VisionLocalizationSubsystem extends SubsystemBase {
   /** Creates a new VisionLocalizationSubsystem. */
-  
   SwerveDriveKinematics m_kinematics;
+
   private Detection[] detections;
   private ObjectTrackerSubsystem m_ots;
   private DrivetrainSubsystem m_dts;
@@ -83,19 +78,18 @@ public class VisionLocalizationSubsystem extends SubsystemBase {
     if (tagPose == null || visionPose == null) {
       return null;
     }
-  
-    
+
     Pose2d fieldPose = tagPose.transformBy(visionPose);
-    SmartDashboard.putNumber("visionToFeildPoseInchesX", Units.metersToInches(fieldPose.getX() ));
-    SmartDashboard.putNumber("visionToFeildPoseInchesY", Units.metersToInches(fieldPose.getY() ));
+    SmartDashboard.putNumber("visionToFeildPoseInchesX", Units.metersToInches(fieldPose.getX()));
+    SmartDashboard.putNumber("visionToFeildPoseInchesY", Units.metersToInches(fieldPose.getY()));
 
     return fieldPose;
   }
-  public int getNearestAprilTag(){
+
+  public int getNearestAprilTag() {
     return Integer.parseInt(m_ots.getNearestAprilTagDetection().objectLabel.substring(10));
   }
 
-  
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -115,8 +109,12 @@ public class VisionLocalizationSubsystem extends SubsystemBase {
               visionToFieldPose(visionAutoData(0, 0, 0, tagId), tagId), Timer.getFPGATimestamp());
           SmartDashboard.putNumber("visionAutoDataX", visionAutoData(0, 0, 0, tagId).getX());
           SmartDashboard.putNumber("visionAutoDataY", visionAutoData(0, 0, 0, tagId).getY());
-          SmartDashboard.putNumber("visionAutoDataX inches", Units.metersToInches(visionAutoData(0, 0, 0, tagId).getX()));
-          SmartDashboard.putNumber("visionAutoDataY inches", Units.metersToInches(visionAutoData(0, 0, 0, tagId).getY()));
+          SmartDashboard.putNumber(
+              "visionAutoDataX inches",
+              Units.metersToInches(visionAutoData(0, 0, 0, tagId).getX()));
+          SmartDashboard.putNumber(
+              "visionAutoDataY inches",
+              Units.metersToInches(visionAutoData(0, 0, 0, tagId).getY()));
           // System.out.println("Successfully add vision meas tag for " + tagId + "SUCESSS");
         } catch (Exception e) {
           //  System.out.println("Failed to add vision measurement for tag " + tagId);

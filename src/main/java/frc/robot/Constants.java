@@ -119,7 +119,8 @@ public class Constants {
       VecBuilder.fill(
           0.002, 0.002, 0.0035); // These are placeholder numbers calibrate later: x, y, z
 
-  public static final Matrix<N3, N1> VISION_STD = VecBuilder.fill(0.002, 0.002, 0.007); // N3 and N1 matrix dimensions
+  public static final Matrix<N3, N1> VISION_STD =
+      VecBuilder.fill(0.002, 0.002, 0.007); // N3 and N1 matrix dimensions
 
   public static final Pose2d[] APRIL_TAG_POSITIONS = {
     null, // index 0 unused

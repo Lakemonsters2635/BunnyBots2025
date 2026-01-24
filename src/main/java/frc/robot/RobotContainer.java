@@ -70,7 +70,8 @@ public class RobotContainer {
     Trigger goToAprilTagNine = new JoystickButton(rightJoystick, 1);
     Trigger resetSwerveButton = new JoystickButton(rightJoystick, 9);
 
-   goToAprilTagNine.onTrue(m_drivetrainSubsystem.goToAprilTag(9));
+    goToAprilTagNine.onTrue(m_drivetrainSubsystem.goToAprilTag(9));
+    
     resetSwerveButton.onTrue(
         new SequentialCommandGroup(
             new InstantCommand(() -> m_drivetrainSubsystem.resetAngle()),
