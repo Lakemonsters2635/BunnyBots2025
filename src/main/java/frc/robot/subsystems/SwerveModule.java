@@ -38,6 +38,7 @@ public class SwerveModule {
 
   private double m_driveMotorGain;
   private int driveId = 0;
+  private long lastLogMs = 0;
 
   /**
    * Constructs a SwerveModule.
@@ -136,40 +137,62 @@ public class SwerveModule {
    * @param desiredState Desired state with speed and angle.
    */
   public void setDesiredState(SwerveModuleState desiredState) {
-    SwerveModuleState state = desiredState;
+    // Optimize and use the returned optimized state so wheel speed sign and
+    // desired angle are consistent.
+    SwerveModuleState state = SwerveModuleState.optimize(desiredState, new Rotation2d(getTurningEncoderRadians()));
 
-    // Prevent rotating module if speed is small. Prevents Jittering.
+    // Prevent rotating module if speed is negligible. Prevents jittering.
     if (Math.abs(state.speedMetersPerSecond) < 0.001) {
       stop();
       return;
     }
 
-    state.optimize(new Rotation2d(getTurningEncoderRadians()));
-
-    // Calculate the drive output from the drive PID controller.
-    // Note: due to the drive PID constants being zero currently, this driveOutput will
-    //       always be zero.
-    final double driveOutput =
-        m_drivePIDController.calculate(getVelocity(), state.speedMetersPerSecond);
-
+    // Drive PID (may be zero until tuned) and a simple feedforward.
+    final double driveOutput = m_drivePIDController.calculate(getVelocity(), state.speedMetersPerSecond);
     final double driveFeedForward = state.speedMetersPerSecond / Constants.kMaxSpeedMetersPerSecond;
 
-    // Calculate the turning motor output from the turning PID controller.
-    final var turnOutput =
-        m_turningPIDController.calculate(getTurningEncoderRadians(), state.angle.getRadians());
+    // Turning PID output
+    final double turnOutput = m_turningPIDController.calculate(getTurningEncoderRadians(), state.angle.getRadians());
 
-    SmartDashboard.putNumber(
-        "angleSwerve" + Integer.toString(driveId), state.angle.getRadians()); //
-    SmartDashboard.putNumber(
-        "cAngleSwerve" + Integer.toString(driveId), getTurningEncoderRadians()); //
+    SmartDashboard.putNumber("angleSwerve" + Integer.toString(driveId), state.angle.getRadians());
+    SmartDashboard.putNumber("cAngleSwerve" + Integer.toString(driveId), getTurningEncoderRadians());
 
-    // Calculate the turning motor output from the turning PID controller.
-    m_driveMotor.set(
-        MathUtil.clamp(
-            (driveOutput + driveFeedForward) * m_driveMotorGain, // gain = 1, no gain
-            -1.0, // min -100%
-            1.0 // max +100%
-            ));
-    m_turningMotor.set(turnOutput);
+  // Final drive command (clamped)
+  double finalDriveCmd = MathUtil.clamp((driveOutput + driveFeedForward) * m_driveMotorGain, -1.0, 1.0);
+
+    // Throttled logging (max ~5Hz) so we don't cause scheduler overruns.
+    long now = System.currentTimeMillis();
+
+    // Angle-error gate: reduce driving while the module is rotating toward the
+    // desired angle. Instead of hard-zeroing the drive (which can feel jerky),
+    // scale the drive by a factor that goes from 0..1 as the angle error goes
+    // from large->small. This smooths the motion and prevents stutter.
+    double delta = state.angle.getRadians() - getTurningEncoderRadians();
+    // Normalize to [-PI, PI]
+    delta = Math.atan2(Math.sin(delta), Math.cos(delta));
+    double angleErrorDeg = Math.abs(Math.toDegrees(delta));
+    final double ANGLE_GATE_DEG = 12.0; // degrees where scaling begins
+    final double ANGLE_ZERO_DEG = 90.0; // angle at which drive is fully suppressed
+    double scale = 1.0;
+    if (angleErrorDeg > ANGLE_GATE_DEG) {
+      scale = Math.max(0.0, 1.0 - (angleErrorDeg - ANGLE_GATE_DEG) / (ANGLE_ZERO_DEG - ANGLE_GATE_DEG));
+      finalDriveCmd *= scale;
+      if (now - lastLogMs > 200) {
+        System.out.println(String.format("SwerveModule %d: scaling drive by %.2f due to angle error=%.1f° (thresh=%.1f°)", driveId, scale, angleErrorDeg, ANGLE_GATE_DEG));
+      }
+    }
+
+    // Send commands to motors; wrap in try/catch to surface issues.
+    try {
+      m_driveMotor.set(finalDriveCmd);
+    } catch (Exception e) {
+      System.out.println("SwerveModule " + driveId + ": drive set error: " + e);
+    }
+
+    try {
+      m_turningMotor.set(turnOutput);
+    } catch (Exception e) {
+      System.out.println("SwerveModule " + driveId + ": turn set error: " + e);
+    }
   }
 }

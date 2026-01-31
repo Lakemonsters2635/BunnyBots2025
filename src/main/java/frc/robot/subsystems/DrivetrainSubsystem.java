@@ -56,7 +56,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public static Joystick leftJoystick = RobotContainer.leftJoystick;
 
   public static Trigger customCenterControlButton = new JoystickButton(leftJoystick, 4);
-
+  double counter = 0;
   public final double m_drivetrainWheelbaseWidth =
       Constants.DRIVETRAIN_WHEELBASE_WIDTH; // Calibrated for 2024 BunnyBots
   public final double m_drivetrainWheelbaseLength =
@@ -156,7 +156,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // this::getPose,
         this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting
         // pose)
-        this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        this::getChassisSpeedsPathPlanner, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         (speeds, feedforwards) ->
             setDesiredStates(
                 speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
@@ -372,32 +372,54 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public Command goToAprilTag(int id) {
-    // Pose2d currentPose = new Pose2d(
-    //     getPose().getX(),
-    //     getPose().getY(),
-    //     new Rotation2d (getPose().getRotation().getRadians())
-    // );
+    counter++;
+    System.out.println("goToAprilTag called with id=" + id);
+
+    // validate tag array bounds
+    if (Constants.APRIL_TAG_POSITIONS == null) {
+      System.out.println("APRIL_TAG_POSITIONS is null");
+      return new edu.wpi.first.wpilibj2.command.InstantCommand(() -> System.out.println("goToAprilTag: APRIL_TAG_POSITIONS is null"));
+    }
+    if (id < 0 || id >= Constants.APRIL_TAG_POSITIONS.length) {
+      System.out.println("goToAprilTag: id out of bounds: " + id);
+      return new edu.wpi.first.wpilibj2.command.InstantCommand(() -> System.out.println("goToAprilTag: id out of bounds"));
+    }
 
     Pose2d tagPose = Constants.APRIL_TAG_POSITIONS[id];
-    Transform2d offset =
-        new Transform2d(
-            0.0, // X offset (left/right of tag)
-            -13*.0254, // Y offset (forward/back from tag)
-            Rotation2d.kZero);
+    if (tagPose == null) {
+      System.out.println("goToAprilTag: tagPose is null for id=" + id);
+      return new edu.wpi.first.wpilibj2.command.InstantCommand(() -> System.out.println("goToAprilTag: tagPose null"));
+    }
+
+  // Offset from the tag to the desired robot pose relative to the tag.
+  // If the robot drives in the wrong direction, flip the sign of the Y value below.
+    Translation2d offsetTranslation = new Translation2d(0.0, 13.0 * 0.0254); // 13 inches forward of the tag
+    Transform2d offset = new Transform2d(offsetTranslation, new Rotation2d(0));
 
     Pose2d targetPose = tagPose.transformBy(offset);
+    System.out.println("goToAprilTag: tagPose=" + tagPose + ", targetPose=" + targetPose);
 
     PathConstraints constraints =
         new PathConstraints(
-            3, // max velocity (m/s)
-            3, // max acceleration (m/s^2)
-            2 * Math.PI, // max angular velocity (rad/s)
-            2 * Math.PI // max angular acceleration (rad/s^2)
-              );
-    
-    //  return AutoBuilder.pathfindToPose(new Pose2d(2, 2, new Rotation2d()), constraints);
+            0.5, // max velocity (m/s)
+            0.3, // max acceleration (m/s^2)
+            2/5 * Math.PI, // max angular velocity (rad/s)
+            2/5 * Math.PI // max angular acceleration (rad/s^2)
+            );
 
-    return AutoBuilder.pathfindToPose(targetPose, constraints);
+    try {
+      Command c = AutoBuilder.pathfindToPose(targetPose, constraints);
+      if (c == null) {
+        System.out.println("goToAprilTag: AutoBuilder.pathfindToPose returned null");
+        return new edu.wpi.first.wpilibj2.command.InstantCommand(() -> System.out.println("goToAprilTag: returned null command"));
+      }
+      System.out.println("goToAprilTag: created command " + c.getClass().getSimpleName());
+      return c;
+    } catch (Exception e) {
+      System.out.println("goToAprilTag: exception while creating path: " + e);
+      e.printStackTrace();
+      return new edu.wpi.first.wpilibj2.command.InstantCommand(() -> System.out.println("goToAprilTag: exception"));
+    }
   }
 
   public void resetAngle() {
@@ -445,7 +467,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // "+getPose().getRotation().getDegrees());
     SmartDashboard.putNumber("getPosePathPlanner().getX()", getPosePathPlanner().getX());
     SmartDashboard.putNumber("getPosePathPlanner().getY()", getPosePathPlanner().getY());
-
+    SmartDashboard.putNumber("counter", counter);
 
     if (followJoystics) {
       if (rightJoystick.getPOV() == Constants.HAT_POV_MOVE_FORWARD) {
@@ -662,6 +684,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @param cs The desired SwerveModule states as a ChassisSpeeds object
    */
   public void setDesiredStates(ChassisSpeeds cs) {
+    System.out.println("setDesiredStates called: vx=" + cs.vxMetersPerSecond + ", vy=" + cs.vyMetersPerSecond + ", omega=" + cs.omegaRadiansPerSecond);
     SwerveModuleState[] desiredStates = m_kinematics.toSwerveModuleStates(cs);
 
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, 6);
@@ -688,6 +711,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("BR Commanded Speed", desiredStates[Constants.BACK_RIGHT_MODULE_STATE_INDEX].speedMetersPerSecond);
     SmartDashboard.putNumber("BR Commanded Angle", desiredStates[Constants.BACK_RIGHT_MODULE_STATE_INDEX].angle.getDegrees());
+
+    System.out.println("setDesiredStates applied module speeds: FL=" + desiredStates[Constants.FRONT_LEFT_MODULE_STATE_INDEX].speedMetersPerSecond
+        + ", FR=" + desiredStates[Constants.FRONT_RIGHT_MODULE_STATE_INDEX].speedMetersPerSecond
+        + ", BL=" + desiredStates[Constants.BACK_LEFT_MODULE_STATE_INDEX].speedMetersPerSecond
+        + ", BR=" + desiredStates[Constants.BACK_RIGHT_MODULE_STATE_INDEX].speedMetersPerSecond);
 
   }
 
@@ -742,6 +770,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @param desiredStates The desired SwerveModule states. Array of `SwerveModuleState[]`
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
+    System.out.println("setModuleStates called");
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DrivetrainSubsystem.kMaxSpeed);
     m_frontLeft.setDesiredState(desiredStates[Constants.FRONT_LEFT_MODULE_STATE_INDEX]);
     m_frontRight.setDesiredState(desiredStates[Constants.FRONT_RIGHT_MODULE_STATE_INDEX]);

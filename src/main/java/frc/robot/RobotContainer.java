@@ -70,7 +70,34 @@ public class RobotContainer {
     Trigger goToAprilTagNine = new JoystickButton(rightJoystick, 1);
     Trigger resetSwerveButton = new JoystickButton(rightJoystick, 9);
 
-    goToAprilTagNine.onTrue(m_drivetrainSubsystem.goToAprilTag(9));
+  // Create and schedule the goToAprilTag command when the button transitions to true.
+  // We use an InstantCommand that constructs and schedules the actual trajectory command
+  // to avoid calling goToAprilTag(...) at binding time.
+  // When button pressed: create a single SequentialCommandGroup (disable joysticks,
+  // run path, re-enable joysticks) and schedule it. Building and scheduling the
+  // group at press-time avoids interrupting an enclosing command that holds the
+  // drivetrain requirement.
+  goToAprilTagNine.onTrue(
+      new InstantCommand(
+          () -> {
+            System.out.println("goToAprilTagNine pressed: creating path group for tag 9");
+            Command cmd = m_drivetrainSubsystem.goToAprilTag(9);
+            if (cmd == null) {
+              System.out.println("goToAprilTag returned null");
+              return;
+            }
+            System.out.println("Created command: " + cmd.getClass().getSimpleName());
+            var safeCmd = cmd.withTimeout(8); // seconds
+            var seq =
+                new SequentialCommandGroup(
+                    new InstantCommand(() -> m_drivetrainSubsystem.setFollowJoystick(false)),
+                    new InstantCommand(() -> System.out.println("PathfindingCommand: starting")),
+                    safeCmd,
+                    new InstantCommand(() -> System.out.println("PathfindingCommand: finished")),
+                    new InstantCommand(() -> m_drivetrainSubsystem.setFollowJoystick(true)));
+            seq.schedule();
+            System.out.println("Scheduled seq.isScheduled()=" + seq.isScheduled());
+          }));
     
     resetSwerveButton.onTrue(
         new SequentialCommandGroup(
