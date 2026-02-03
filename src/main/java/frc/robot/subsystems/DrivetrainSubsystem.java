@@ -156,7 +156,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // this::getPose,
         this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting
         // pose)
-        this::getChassisSpeedsPathPlanner, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         (speeds, feedforwards) ->
             setDesiredStates(
                 speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
@@ -198,10 +198,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     public Pose2d getPosePathPlanner(){
       Pose2d rawPose = getPose();
       
-      Translation2d adjTranslation = rawPose.getTranslation().rotateBy(Rotation2d.fromDegrees(90));
-      Rotation2d adjRotation = rawPose.getRotation().plus(Rotation2d.fromDegrees(90));
+      // Translation2d adjTranslation = rawPose.getTranslation().rotateBy(Rotation2d.fromDegrees(180));
+      // Rotation2d adjRotation = rawPose.getRotation().plus(Rotation2d.fromDegrees(180));
+      Translation2d adjTranslation = new Translation2d(-rawPose.getX(), rawPose.getY());
       
-      return new Pose2d(adjTranslation, adjRotation);
+      return new Pose2d(adjTranslation, new Rotation2d(0)); //not sure what to do with rot
     }
 
   public Rotation2d getGyroAngle() {
@@ -393,7 +394,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   // Offset from the tag to the desired robot pose relative to the tag.
   // If the robot drives in the wrong direction, flip the sign of the Y value below.
-    Translation2d offsetTranslation = new Translation2d(0.0, 13.0 * 0.0254); // 13 inches forward of the tag
+    Translation2d offsetTranslation = new Translation2d(-13 * .0254, 0 * 0.0254); // 13 inches forward of the tag
     Transform2d offset = new Transform2d(offsetTranslation, new Rotation2d(0));
 
     Pose2d targetPose = tagPose.transformBy(offset);
@@ -523,11 +524,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
       //         0,
       //         0,
       //         true);
-      this.drive(
+      if(followJoystics){
+        this.drive(
           xPowerCommanded * DrivetrainSubsystem.kMaxSpeed,
           yPowerCommanded * DrivetrainSubsystem.kMaxSpeed,
           MathUtil.applyDeadband(rotCommanded * this.kMaxAngularSpeed, 0.2),
           true);
+      }
+      
       // this.drive(xPowerCommanded * DrivetrainSubsystem.kMaxSpeed,
       //         yPowerCommanded * DrivetrainSubsystem.kMaxSpeed,
       //         MathUtil.applyDeadband(rotCommanded * this.kMaxAngularSpeed, 0.2),
@@ -565,7 +569,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // SmartDashboard.putNumberArray("loggingActualStateForAdvantageScope",
     // loggingActualStateForAdvantageScope);
 
-    // updateOdometry();
+    updateOdometry();
 
     putDTSToSmartDashboard();
     tuneAngleOffsetPutToDTS();
@@ -752,10 +756,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public ChassisSpeeds getChassisSpeedsPathPlanner() {
     ChassisSpeeds raw = getChassisSpeeds();
 
+    double adjVx = -raw.vxMetersPerSecond;
+    double adjVy = -raw.vyMetersPerSecond;
+    double adjOmega = raw.omegaRadiansPerSecond;
     // Rotate by +90° to match PathPlanner’s X-forward, Y-left convention
-    double adjVx = -raw.vyMetersPerSecond; // your Y forward → PathPlanner X forward
-    double adjVy = raw.vxMetersPerSecond;  // your X right → PathPlanner Y left
-    double adjOmega = raw.omegaRadiansPerSecond; // rotation is the same
+    // double adjVx = -raw.vyMetersPerSecond; // your Y forward → PathPlanner X forward
+    // double adjVy = raw.vxMetersPerSecond;  // your X right → PathPlanner Y left
+    // double adjOmega = raw.omegaRadiansPerSecond; // rotation is the same
 
     return new ChassisSpeeds(adjVx, adjVy, adjOmega);
 }
