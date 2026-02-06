@@ -139,7 +139,8 @@ public class SwerveModule {
   public void setDesiredState(SwerveModuleState desiredState) {
     // Optimize and use the returned optimized state so wheel speed sign and
     // desired angle are consistent.
-    SwerveModuleState state = SwerveModuleState.optimize(desiredState, new Rotation2d(getTurningEncoderRadians()));
+    SwerveModuleState state =
+        SwerveModuleState.optimize(desiredState, new Rotation2d(getTurningEncoderRadians()));
 
     // Prevent rotating module if speed is negligible. Prevents jittering.
     if (Math.abs(state.speedMetersPerSecond) < 0.001) {
@@ -148,17 +149,21 @@ public class SwerveModule {
     }
 
     // Drive PID (may be zero until tuned) and a simple feedforward.
-    final double driveOutput = m_drivePIDController.calculate(getVelocity(), state.speedMetersPerSecond);
+    final double driveOutput =
+        m_drivePIDController.calculate(getVelocity(), state.speedMetersPerSecond);
     final double driveFeedForward = state.speedMetersPerSecond / Constants.kMaxSpeedMetersPerSecond;
 
     // Turning PID output
-    final double turnOutput = m_turningPIDController.calculate(getTurningEncoderRadians(), state.angle.getRadians());
+    final double turnOutput =
+        m_turningPIDController.calculate(getTurningEncoderRadians(), state.angle.getRadians());
 
     SmartDashboard.putNumber("angleSwerve" + Integer.toString(driveId), state.angle.getRadians());
-    SmartDashboard.putNumber("cAngleSwerve" + Integer.toString(driveId), getTurningEncoderRadians());
+    SmartDashboard.putNumber(
+        "cAngleSwerve" + Integer.toString(driveId), getTurningEncoderRadians());
 
-  // Final drive command (clamped)
-  double finalDriveCmd = MathUtil.clamp((driveOutput + driveFeedForward) * m_driveMotorGain, -1.0, 1.0);
+    // Final drive command (clamped)
+    double finalDriveCmd =
+        MathUtil.clamp((driveOutput + driveFeedForward) * m_driveMotorGain, -1.0, 1.0);
 
     // Throttled logging (max ~5Hz) so we don't cause scheduler overruns.
     long now = System.currentTimeMillis();
@@ -175,10 +180,14 @@ public class SwerveModule {
     final double ANGLE_ZERO_DEG = 90.0; // angle at which drive is fully suppressed
     double scale = 1.0;
     if (angleErrorDeg > ANGLE_GATE_DEG) {
-      scale = Math.max(0.0, 1.0 - (angleErrorDeg - ANGLE_GATE_DEG) / (ANGLE_ZERO_DEG - ANGLE_GATE_DEG));
+      scale =
+          Math.max(0.0, 1.0 - (angleErrorDeg - ANGLE_GATE_DEG) / (ANGLE_ZERO_DEG - ANGLE_GATE_DEG));
       finalDriveCmd *= scale;
       if (now - lastLogMs > 200) {
-        System.out.println(String.format("SwerveModule %d: scaling drive by %.2f due to angle error=%.1f° (thresh=%.1f°)", driveId, scale, angleErrorDeg, ANGLE_GATE_DEG));
+        System.out.println(
+            String.format(
+                "SwerveModule %d: scaling drive by %.2f due to angle error=%.1f° (thresh=%.1f°)",
+                driveId, scale, angleErrorDeg, ANGLE_GATE_DEG));
       }
     }
 

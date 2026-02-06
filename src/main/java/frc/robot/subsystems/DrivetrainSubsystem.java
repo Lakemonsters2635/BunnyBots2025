@@ -4,22 +4,15 @@
 
 package frc.robot.subsystems;
 
-import java.util.List;
-import java.util.function.Supplier;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPoint;
-import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 import com.studica.frc.AHRS;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -44,6 +37,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import java.util.List;
+import java.util.function.Supplier;
 
 public class DrivetrainSubsystem extends SubsystemBase {
   public static final double kMaxSpeed =
@@ -195,15 +190,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_frontRight.stop();
   }
 
-    public Pose2d getPosePathPlanner(){
-      Pose2d rawPose = getPose();
-      
-      // Translation2d adjTranslation = rawPose.getTranslation().rotateBy(Rotation2d.fromDegrees(180));
-      // Rotation2d adjRotation = rawPose.getRotation().plus(Rotation2d.fromDegrees(180));
-      Translation2d adjTranslation = new Translation2d(-rawPose.getX(), rawPose.getY());
-      
-      return new Pose2d(adjTranslation, new Rotation2d(0)); //not sure what to do with rot
-    }
+  public Pose2d getPosePathPlanner() {
+    Pose2d rawPose = getPose();
+
+    // Translation2d adjTranslation =
+    // rawPose.getTranslation().rotateBy(Rotation2d.fromDegrees(180));
+    // Rotation2d adjRotation = rawPose.getRotation().plus(Rotation2d.fromDegrees(180));
+    Translation2d adjTranslation = new Translation2d(-rawPose.getX(), rawPose.getY());
+
+    return new Pose2d(adjTranslation, new Rotation2d(0)); // not sure what to do with rot
+  }
 
   public Rotation2d getGyroAngle() {
     return new Rotation2d(
@@ -379,22 +375,26 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // validate tag array bounds
     if (Constants.APRIL_TAG_POSITIONS == null) {
       System.out.println("APRIL_TAG_POSITIONS is null");
-      return new edu.wpi.first.wpilibj2.command.InstantCommand(() -> System.out.println("goToAprilTag: APRIL_TAG_POSITIONS is null"));
+      return new edu.wpi.first.wpilibj2.command.InstantCommand(
+          () -> System.out.println("goToAprilTag: APRIL_TAG_POSITIONS is null"));
     }
     if (id < 0 || id >= Constants.APRIL_TAG_POSITIONS.length) {
       System.out.println("goToAprilTag: id out of bounds: " + id);
-      return new edu.wpi.first.wpilibj2.command.InstantCommand(() -> System.out.println("goToAprilTag: id out of bounds"));
+      return new edu.wpi.first.wpilibj2.command.InstantCommand(
+          () -> System.out.println("goToAprilTag: id out of bounds"));
     }
 
     Pose2d tagPose = Constants.APRIL_TAG_POSITIONS[id];
     if (tagPose == null) {
       System.out.println("goToAprilTag: tagPose is null for id=" + id);
-      return new edu.wpi.first.wpilibj2.command.InstantCommand(() -> System.out.println("goToAprilTag: tagPose null"));
+      return new edu.wpi.first.wpilibj2.command.InstantCommand(
+          () -> System.out.println("goToAprilTag: tagPose null"));
     }
 
-  // Offset from the tag to the desired robot pose relative to the tag.
-  // If the robot drives in the wrong direction, flip the sign of the Y value below.
-    Translation2d offsetTranslation = new Translation2d(-13 * .0254, 0 * 0.0254); // 13 inches forward of the tag
+    // Offset from the tag to the desired robot pose relative to the tag.
+    // If the robot drives in the wrong direction, flip the sign of the Y value below.
+    Translation2d offsetTranslation =
+        new Translation2d(-13 * .0254, 0 * 0.0254); // 13 inches forward of the tag
     Transform2d offset = new Transform2d(offsetTranslation, new Rotation2d(0));
 
     Pose2d targetPose = tagPose.transformBy(offset);
@@ -404,22 +404,24 @@ public class DrivetrainSubsystem extends SubsystemBase {
         new PathConstraints(
             0.5, // max velocity (m/s)
             0.3, // max acceleration (m/s^2)
-            2/5 * Math.PI, // max angular velocity (rad/s)
-            2/5 * Math.PI // max angular acceleration (rad/s^2)
+            2 / 5 * Math.PI, // max angular velocity (rad/s)
+            2 / 5 * Math.PI // max angular acceleration (rad/s^2)
             );
 
     try {
       Command c = AutoBuilder.pathfindToPose(targetPose, constraints);
       if (c == null) {
         System.out.println("goToAprilTag: AutoBuilder.pathfindToPose returned null");
-        return new edu.wpi.first.wpilibj2.command.InstantCommand(() -> System.out.println("goToAprilTag: returned null command"));
+        return new edu.wpi.first.wpilibj2.command.InstantCommand(
+            () -> System.out.println("goToAprilTag: returned null command"));
       }
       System.out.println("goToAprilTag: created command " + c.getClass().getSimpleName());
       return c;
     } catch (Exception e) {
       System.out.println("goToAprilTag: exception while creating path: " + e);
       e.printStackTrace();
-      return new edu.wpi.first.wpilibj2.command.InstantCommand(() -> System.out.println("goToAprilTag: exception"));
+      return new edu.wpi.first.wpilibj2.command.InstantCommand(
+          () -> System.out.println("goToAprilTag: exception"));
     }
   }
 
@@ -524,14 +526,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
       //         0,
       //         0,
       //         true);
-      if(followJoystics){
+      if (followJoystics) {
         this.drive(
-          xPowerCommanded * DrivetrainSubsystem.kMaxSpeed,
-          yPowerCommanded * DrivetrainSubsystem.kMaxSpeed,
-          MathUtil.applyDeadband(rotCommanded * this.kMaxAngularSpeed, 0.2),
-          true);
+            xPowerCommanded * DrivetrainSubsystem.kMaxSpeed,
+            yPowerCommanded * DrivetrainSubsystem.kMaxSpeed,
+            MathUtil.applyDeadband(rotCommanded * this.kMaxAngularSpeed, 0.2),
+            true);
       }
-      
+
       // this.drive(xPowerCommanded * DrivetrainSubsystem.kMaxSpeed,
       //         yPowerCommanded * DrivetrainSubsystem.kMaxSpeed,
       //         MathUtil.applyDeadband(rotCommanded * this.kMaxAngularSpeed, 0.2),
@@ -688,7 +690,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @param cs The desired SwerveModule states as a ChassisSpeeds object
    */
   public void setDesiredStates(ChassisSpeeds cs) {
-    System.out.println("setDesiredStates called: vx=" + cs.vxMetersPerSecond + ", vy=" + cs.vyMetersPerSecond + ", omega=" + cs.omegaRadiansPerSecond);
+    System.out.println(
+        "setDesiredStates called: vx="
+            + cs.vxMetersPerSecond
+            + ", vy="
+            + cs.vyMetersPerSecond
+            + ", omega="
+            + cs.omegaRadiansPerSecond);
     SwerveModuleState[] desiredStates = m_kinematics.toSwerveModuleStates(cs);
 
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, 6);
@@ -704,23 +712,43 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Commanded omega (rad/s)", cs.omegaRadiansPerSecond);
 
     // Publish each module’s commanded speed and angle
-    SmartDashboard.putNumber("FL Commanded Speed", desiredStates[Constants.FRONT_LEFT_MODULE_STATE_INDEX].speedMetersPerSecond);
-    SmartDashboard.putNumber("FL Commanded Angle", desiredStates[Constants.FRONT_LEFT_MODULE_STATE_INDEX].angle.getDegrees());
+    SmartDashboard.putNumber(
+        "FL Commanded Speed",
+        desiredStates[Constants.FRONT_LEFT_MODULE_STATE_INDEX].speedMetersPerSecond);
+    SmartDashboard.putNumber(
+        "FL Commanded Angle",
+        desiredStates[Constants.FRONT_LEFT_MODULE_STATE_INDEX].angle.getDegrees());
 
-    SmartDashboard.putNumber("FR Commanded Speed", desiredStates[Constants.FRONT_RIGHT_MODULE_STATE_INDEX].speedMetersPerSecond);
-    SmartDashboard.putNumber("FR Commanded Angle", desiredStates[Constants.FRONT_RIGHT_MODULE_STATE_INDEX].angle.getDegrees());
+    SmartDashboard.putNumber(
+        "FR Commanded Speed",
+        desiredStates[Constants.FRONT_RIGHT_MODULE_STATE_INDEX].speedMetersPerSecond);
+    SmartDashboard.putNumber(
+        "FR Commanded Angle",
+        desiredStates[Constants.FRONT_RIGHT_MODULE_STATE_INDEX].angle.getDegrees());
 
-    SmartDashboard.putNumber("BL Commanded Speed", desiredStates[Constants.BACK_LEFT_MODULE_STATE_INDEX].speedMetersPerSecond);
-    SmartDashboard.putNumber("BL Commanded Angle", desiredStates[Constants.BACK_LEFT_MODULE_STATE_INDEX].angle.getDegrees());
+    SmartDashboard.putNumber(
+        "BL Commanded Speed",
+        desiredStates[Constants.BACK_LEFT_MODULE_STATE_INDEX].speedMetersPerSecond);
+    SmartDashboard.putNumber(
+        "BL Commanded Angle",
+        desiredStates[Constants.BACK_LEFT_MODULE_STATE_INDEX].angle.getDegrees());
 
-    SmartDashboard.putNumber("BR Commanded Speed", desiredStates[Constants.BACK_RIGHT_MODULE_STATE_INDEX].speedMetersPerSecond);
-    SmartDashboard.putNumber("BR Commanded Angle", desiredStates[Constants.BACK_RIGHT_MODULE_STATE_INDEX].angle.getDegrees());
+    SmartDashboard.putNumber(
+        "BR Commanded Speed",
+        desiredStates[Constants.BACK_RIGHT_MODULE_STATE_INDEX].speedMetersPerSecond);
+    SmartDashboard.putNumber(
+        "BR Commanded Angle",
+        desiredStates[Constants.BACK_RIGHT_MODULE_STATE_INDEX].angle.getDegrees());
 
-    System.out.println("setDesiredStates applied module speeds: FL=" + desiredStates[Constants.FRONT_LEFT_MODULE_STATE_INDEX].speedMetersPerSecond
-        + ", FR=" + desiredStates[Constants.FRONT_RIGHT_MODULE_STATE_INDEX].speedMetersPerSecond
-        + ", BL=" + desiredStates[Constants.BACK_LEFT_MODULE_STATE_INDEX].speedMetersPerSecond
-        + ", BR=" + desiredStates[Constants.BACK_RIGHT_MODULE_STATE_INDEX].speedMetersPerSecond);
-
+    System.out.println(
+        "setDesiredStates applied module speeds: FL="
+            + desiredStates[Constants.FRONT_LEFT_MODULE_STATE_INDEX].speedMetersPerSecond
+            + ", FR="
+            + desiredStates[Constants.FRONT_RIGHT_MODULE_STATE_INDEX].speedMetersPerSecond
+            + ", BL="
+            + desiredStates[Constants.BACK_LEFT_MODULE_STATE_INDEX].speedMetersPerSecond
+            + ", BR="
+            + desiredStates[Constants.BACK_RIGHT_MODULE_STATE_INDEX].speedMetersPerSecond);
   }
 
   /**
@@ -765,7 +793,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // double adjOmega = raw.omegaRadiansPerSecond; // rotation is the same
 
     return new ChassisSpeeds(adjVx, adjVy, adjOmega);
-}
+  }
 
   public AHRS getGyroscope() {
     return m_gyro;
